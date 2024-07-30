@@ -69,7 +69,7 @@ class TrainController extends Controller
 
             for ($i = 1; $i <= 50; $i++) {
                 $imagePath = $publicPath . '/photo_' . $i . '.png';
-                $command = escapeshellcmd("python $pythonScriptPath encode_images $imagePath $encodingPath $username");
+                $command = escapeshellcmd("py $pythonScriptPath encode_images $imagePath $encodingPath $username");
 
                 // Lưu lệnh vào mảng để trả về sau
                 $commands[] = $command;

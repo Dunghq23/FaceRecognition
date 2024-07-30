@@ -94,7 +94,7 @@ class AuthController extends Controller
                 $encodingPath = storage_path('app/models/encodings.txt');
                 $outputPath = storage_path('app/data/output.txt');
 
-                $command = escapeshellcmd("python $pythonScriptPath recognize_faces $imagePath $encodingPath $outputPath");
+                $command = escapeshellcmd("py $pythonScriptPath recognize_faces $imagePath $encodingPath $outputPath");
 
                 // Thực hiện lệnh và lưu kết quả
                 exec($command, $output[], $returnVars[]);
