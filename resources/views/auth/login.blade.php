@@ -10,82 +10,38 @@
     <div class="container mt-5">
         <div class="row justify-content-center">
             <div class="col-md-6">
-                <div class="card">
-                    <div class="card-header">Đăng nhập</div>
-                    <div class="card-body">
-                        <form method="POST" action="{{ route('login.submit') }}">
-                            @csrf
-                            <div class="form-group">
-                                <label for="username">Tên đăng nhập:</label>
-                                <input type="text" class="form-control" id="username" name="username"
-                                    value="{{ old('username') }}" required autofocus>
-                            </div>
-                            <div class="form-group">
-                                <label for="password">Mật khẩu:</label>
-                                <input type="password" class="form-control" id="password" name="password" required>
-                            </div>
-                            <button id="ButtonLogin" type="submit" class="btn btn-primary">Đăng nhập</button>
-
-                            @error('loginError')
-                                <div class="text-danger mt-2">{{ $message }}</div>
-                            @enderror
-                        </form>
-                    </div>
-                    <div class="card-footer">
-                        <button type="button" class="btn btn-success" id="btnFaceLogin">Đăng nhập bằng khuôn
-                            mặt</button>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div id="Recognize" class="recognizeface w-100 h-100 d-none">
+                <div id="Recognize" class="recognizeface border border-dark">
                     <div class="wrapper">
                         <video class="w-100" id="video" autoplay class="img-fluid rounded"></video>
                         <div id="loadingIndicator" class="d-none" style="text-align: center;">
                             <img src="./assets/images/loading.gif" alt="Loading..." />
                         </div>
                     </div>
-                    <div class="controls">
-                        <button id="recognizeButton" class="btn btn-success">Nhận dạng</button>
+                    {{-- <div class="controls">
+                        <button id="timekeeping_btn" class="btn btn-success align-middle">Chấm công</button>
+                        <button id="toggle-camera" class="btn btn-danger"><i class="fa-solid fa-camera"></i></button>
+                        <h1 id="personName" class="d-none"></h1>
+                    </div> --}}
+                    <div class="align-middle p-2">
+                        <button type="button" id="timekeeping_btn" class="btn btn-success align-middle">Chấm công</button>
                         <h1 id="personName" class="d-none"></h1>
                     </div>
                     <canvas id="canvas" class="d-none"></canvas>
                 </div>
             </div>
         </div>
-
-        @if (session('message') && session('type'))
-            <div class="toast-container rounded position-fixed bottom-0 end-0 p-3">
-                <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-                    <div class="toast-body bg-{{ session('type') }} d-flex align-items-center justify-content-between">
-                        <div class="d-flex justify-content-center align-items-center gap-2">
-                            @if (session('type') == 'success')
-                                <i class="fas fa-check-circle text-light fs-5"></i>
-                            @elseif(session('type') == 'danger' || session('type') == 'warning')
-                                <i class="fas fa-times-circle text-light fs-5"></i>
-                            @elseif(session('type') == 'info' || session('type') == 'secondary')
-                                <i class="fas fa-info-circle text-light fs-5"></i>
-                            @endif
-                            <h6 class="h6 text-white m-0">{{ session('message') }}</h6>
-                        </div>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"
-                            aria-label="Close"></button>
-                    </div>
-                </div>
-            </div>
-        @endif
     </div>
 @endsection
 
 @push('scripts')
     <script>
         $(document).ready(function() {
-            let stream;
+            // let stream;
 
             // Hàm bắt đầu camera
             async function startCamera() {
                 try {
-                    stream = await navigator.mediaDevices.getUserMedia({
+                    let stream = await navigator.mediaDevices.getUserMedia({
                         video: true
                     });
                     const video = $('#video')[0];
@@ -94,6 +50,8 @@
                     console.error('Lỗi khi truy cập camera:', error);
                 }
             }
+
+            startCamera();
 
             // Hàm dừng camera
             function stopCamera() {
@@ -106,22 +64,37 @@
             }
 
             // Xử lý sự kiện click vào nút "Đăng nhập bằng khuôn mặt"
-            $('#btnFaceLogin').click(function() {
-                $('#Recognize').toggle(); // Hiển thị hoặc ẩn phần nhận dạng khuôn mặt
-                if (stream) {
-                    stopCamera();
-                    $('#Recognize').removeClass('d-block').addClass('d-none');
-                } else {
-                    startCamera();
-                    $('#Recognize').removeClass('d-none').addClass('d-block');
-                    setTimeout(function() {
-                        takephoto();
-                    }, 1000);
-                }
-            });
+            // $('#toggle-camera').click(function() {
+            //     $('#Recognize').toggle(); // Hiển thị hoặc ẩn phần nhận dạng khuôn mặt
+            //     if (stream) {
+            //         stopCamera();
+            //         $('#Recognize').addClass('d-none');
+            //     } else {
+            //         startCamera();
+            //         $('#Recognize').removeClass('d-none');
+            //     }
+            // });
+
+            function ShowToast(message) {
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: "top-end",
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.onmouseenter = Swal.stopTimer;
+                        toast.onmouseleave = Swal.resumeTimer;
+                    }
+                });
+                Toast.fire({
+                    icon: "error",
+                    title: message
+                });
+            }
 
             // Xử lý sự kiện click vào nút "Nhận dạng"
-            $('#recognizeButton').click(function() {
+            $('#timekeeping_btn').click(function() {
                 takephoto();
             });
 
@@ -144,8 +117,8 @@
 
                 // Lấy dữ liệu ảnh từ canvas dưới dạng base64
                 const imageBase64 = canvas.toDataURL('image/png');
-                $('#loadingIndicator').removeClass('d-none').addClass('d-block');
-                $('#personName').text("");
+                $('#loadingIndicator').removeClass('d-none');
+                $('#personName').addClass('d-none');
                 // Gửi dữ liệu ảnh base64 đến máy chủ qua AJAX
                 $.ajax({
                     url: '/save-photo',
@@ -162,6 +135,7 @@
                         recognizeFace(response.filepath);
                     },
                     error: function(xhr, status, error) {
+                        ShowToast("Đã có lỗi xảy ra khi gửi ảnh tới máy chủ!");
                         console.error('Lỗi:', error);
                     }
                 });
@@ -179,26 +153,64 @@
                         imagePath: imagePath
                     }),
                     success: function(response) {
-                        console.log('Tên người được nhận dạng:', response.recognizedName);
-                        $('#personName').text(response.recognizedName).removeClass('d-none').addClass(
-                            'd-block');
+                        let name = response.recognizedName;
+                        console.log('Tên người được nhận dạng:', name);
+                        $('#personName').text(name);
 
-                        if (response.recognizedName !== 'Unknown' && response.recognizedName !==
-                            'Không có khuôn mặt được tìm thấy!' && response.recognizeFace !=
-                            'Phát hiện 2 khuôn mặt, vui lòng thử lại!') {
-                            window.location.href = '/';
+                        if (name !== 'Unknown' && name !== 'Không có khuôn mặt được tìm thấy!' &&
+                            name != 'Phát hiện 2 khuôn mặt, vui lòng thử lại!') {
+                            TimeKeeping(name);
                         } else {
-                            alert('Tên đăng nhập hoặc mật khẩu không chính xác!');
+                            Swal.fire({
+                                title: "Cảnh báo!",
+                                text: 'Nhân viên này không tồn tại!',
+                                icon: "warning"
+                            });
                         }
 
                     },
                     error: function(xhr, status, error) {
+                        ShowToast("Đã có lỗi xảy ra khi nhận diện ảnh!");
                         console.error('Lỗi:', error);
                     },
                     complete: function() {
-                        $('#loadingIndicator').removeClass('d-block').addClass('d-none');
-
+                        $('#loadingIndicator').addClass('d-none');
                     }
+                });
+            }
+
+            // timekeeping
+            function TimeKeeping(employee_name) {
+                $.ajax({
+                    url: '/timekeeping',
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                    },
+                    data: {
+                        employee_name: employee_name
+                    },
+                    success: function(response) {
+                        let status = response['status'];
+                        let message = response['message'];
+                        if (status === 'error') {
+                            Swal.fire({
+                                title: "Lỗi!",
+                                text: employee_name + message,
+                                icon: "error"
+                            });
+                        } else {
+                            Swal.fire({
+                                title: "Thành công!",
+                                text: message,
+                                icon: "success"
+                            });
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        ShowToast("Đã có lỗi xảy ra khi chấm công!");
+                        console.error('Lỗi:', error);
+                    },
                 });
             }
         });

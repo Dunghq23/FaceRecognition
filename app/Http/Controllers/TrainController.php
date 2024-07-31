@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Department;
+use App\Models\Employee;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
@@ -92,23 +94,40 @@ class TrainController extends Controller
     public function TrainFace(Request $request)
     {
         if ($request->ajax()) {
-            $username = $request->input('username');
+            // get value from form
+            $employee_name = $request->input('employee_name');
+            $department_id = $request->input('deparment_id');
             $filePath = $request->input('filePath');
+            
+            // process
             $directory = public_path('Storage/ImageUnknown');
             $imagePath = str_replace(asset(''), $directory, url($filePath));
             $imagePath = str_replace('ImageUnknownStorage', '', $imagePath);
-
 
             // Kiểm tra và lấy đường dẫn chính xác của các file và script Python
             $pythonScriptPath = storage_path('app/python/FaceRecognition.py');
             $encodingPath = storage_path('app/models/encodings.txt');
 
-            $command = "python $pythonScriptPath encode_images $imagePath $encodingPath $username";
+            $command = "python $pythonScriptPath encode_images $imagePath $encodingPath $employee_name";
             exec($command, $output, $returnVars);
 
+            if(!$returnVars){
+                Employee::create([
+                    'employee_name' => $employee_name,
+                    'fk_department_id' => $department_id
+                ]);
+
+                return response()->json([
+                    'status' => 'success',
+                    'commands' => $command,
+                    'imagePath' => $imagePath,
+                    'message' => 'Huấn luyện và lưu lại thành công!'
+                ]);
+            }
+
             return response()->json([
-                'commands' => $command,
-                'imagePath' => $imagePath,
+                'status' => 'error',
+                'message' => 'Đã xảy ra lỗi khi thực hiện huấn luyện!'
             ]);
         }
     }
@@ -143,8 +162,10 @@ class TrainController extends Controller
             $unknownRecognitions[] = $recognition;
         }
 
+        $departments = Department::all();
+
         // Trả về view và truyền dữ liệu vào view
-        return view('auth.unknownList', compact('unknownRecognitions'));
+        return view('auth.unknownList', compact('unknownRecognitions', 'departments'));
     }
 
     public function deleteImages()

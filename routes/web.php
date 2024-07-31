@@ -1,6 +1,10 @@
 <?php
+
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\TimekeepingController;
 use App\Http\Controllers\TrainController;
+use App\Models\Timekeeping;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -31,6 +35,12 @@ Route::get('/recognition-unknown-list', [TrainController::class, 'UnknownList'])
 Route::post('/delete-image', [TrainController::class, 'deleteImage'])->name('delete.image');
 
 
+// checkin checkout timekeeping
+Route::post('/timekeeping', [TimekeepingController::class, 'timekeeping']);
+// Route::post('/checkin', [TimekeepingController::class, 'checkin']);
+// Route::post('/checkout', [TimekeepingController::class, 'checkout']);
+
+
 // Check Kết nối csdl
 Route::get('/check-db-connection', function () {
     try {
@@ -39,4 +49,18 @@ Route::get('/check-db-connection', function () {
     } catch (\Exception $e) {
         return "Could not connect to database. Error: " . $e->getMessage();
     }
+
+    // $serverName = "LAPTOP-OJF6T1N2";
+    // $connectionOptions = array(
+    //     "Database" => "TimeKeeping",
+    //     "TrustServerCertificate" => "yes"
+    // );
+
+    // // Try to connect
+    // $conn = sqlsrv_connect($serverName, $connectionOptions);
+    // if ($conn === false) {
+    //     die(print_r(sqlsrv_errors(), true));
+    // } else {
+    //     echo "Connected successfully!";
+    // }
 });

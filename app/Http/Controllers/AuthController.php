@@ -30,7 +30,6 @@ class AuthController extends Controller
             // So sánh mật khẩu
             if ($password === $user->Password) {
                 return redirect('/')->with(['message' => 'Đăng nhập thành công', 'type' => 'success']);
-
             } else {
                 return back()->with([
                     'message' => 'Mật khẩu không chính xác.',
@@ -63,7 +62,8 @@ class AuthController extends Controller
 
                 // Tạo thư mục nếu chưa tồn tại
                 if (!Storage::exists($uploadPath)) {
-                    Storage::makeDirectory($uploadPath, 0777, true, true);
+                    // Storage::makeDirectory($uploadPath, 0777, true, true);
+                    Storage::makeDirectory($uploadPath);
                 }
 
                 // Tạo tên file duy nhất
@@ -93,11 +93,19 @@ class AuthController extends Controller
                 $pythonScriptPath = storage_path('app/python/FaceRecognition.py');
                 $encodingPath = storage_path('app/models/encodings.txt');
                 $outputPath = storage_path('app/data/output.txt');
+                if (!file_exists($outputPath)) {
+                    $file = fopen($outputPath, 'w');
+                    fclose($file);
+                }
+
+                if (!file_exists($encodingPath)) {
+                    $file = fopen($encodingPath, 'w');
+                    fclose($file);
+                }
 
                 $command = escapeshellcmd("py $pythonScriptPath recognize_faces $imagePath $encodingPath $outputPath");
 
-                // Thực hiện lệnh và lưu kết quả
-                exec($command, $output[], $returnVars[]);
+                exec($command);
 
                 // Đọc kết quả từ file output
                 if (file_exists($outputPath)) {
@@ -123,18 +131,6 @@ class AuthController extends Controller
             } else {
                 return response()->json(['error' => 'Không có dữ liệu imagePath được gửi lên.'], 400);
             }
-        }
-    }
-
-    public function loginWithFace(Request $request)
-    {
-        $username = $request->input('username');
-        $user = DB::table('dbo.User')
-            ->where('UserName', $username)
-            ->first();
-
-        if ($user) {
-            return redirect('/')->with(['message' => 'Đăng nhập thành công', 'type' => 'success']);
         }
     }
 }
