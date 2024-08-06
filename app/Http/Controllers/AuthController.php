@@ -9,41 +9,6 @@ use Illuminate\Support\Facades\Storage;
 
 class AuthController extends Controller
 {
-    // Hiển thị form đăng nhập
-    public function showLoginForm()
-    {
-        return view('auth.login');
-    }
-
-    // Xử lý đăng nhập
-    public function login(Request $request)
-    {
-        $username = $request->input('username');
-        $password = $request->input('password');
-
-        // Sử dụng DB::table để truy vấn dữ liệu từ bảng 'dbo.User' và áp dụng điều kiện where
-        $user = DB::table('dbo.User')
-            ->where('UserName', $username)
-            ->first();
-
-        if ($user) {
-            // So sánh mật khẩu
-            if ($password === $user->Password) {
-                return redirect('/')->with(['message' => 'Đăng nhập thành công', 'type' => 'success']);
-            } else {
-                return back()->with([
-                    'message' => 'Mật khẩu không chính xác.',
-                    'type' => 'danger'
-                ]);
-            }
-        } else {
-            return back()->with([
-                'message' => 'Tên đăng nhập không chính xác.',
-                'type' => 'danger'
-            ]);
-        }
-    }
-
     public function savePhoto(Request $request)
     {
         if ($request->ajax()) {

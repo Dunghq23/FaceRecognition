@@ -1,0 +1,200 @@
+:root {
+    --primary: #38a7ff;
+    --primary-hover: #0081e8;
+    --text-primary-color: #525666;
+}
+body {
+    font-family: "Open Sans", "Roboto", sans-serif !important;
+}
+textarea {
+    resize: none;
+}
+.content-wrapper {
+    background: #f4f6f9;
+}
+form .form-label {
+    margin-bottom: 4px;
+}
+.spacer {
+    height: 87.8px;
+    background-color: transparent;
+}
+.hexagon {
+    position: relative;
+    width: 150px;
+    height: 200px;
+    background: black;
+    rotate: 90deg;
+    --border-width: 2px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.hexagon:before,
+.double:after {
+    position: absolute;
+    content: "";
+}
+.hexagon:before {
+    top: var(--border-width);
+    left: var(--border-width);
+    height: calc(100% - 2 * var(--border-width));
+    width: calc(100% - 2 * var(--border-width));
+}
+.hexagon-outline.hexagon::before {
+    background-color: #fff;
+}
+.hexagon-secondary.hexagon::before {
+    background-color: #aac4ff;
+}
+.hexagon-main.hexagon::before {
+    background-color: #d2daff;
+    top: 0px;
+    left: 0px;
+    height: 0px;
+    width: 0px;
+}
+.hexagon-main {
+    background-color: #d2daff;
+}
+.hexagon,
+.hexagon:before {
+    -webkit-clip-path: polygon(
+        50% 0%,
+        100% 25%,
+        100% 75%,
+        50% 100%,
+        0% 75%,
+        0% 25%
+    );
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+}
+
+.hexagon > img {
+    rotate: 270deg;
+}
+.hexagon > span {
+    color: #333 !important;
+    text-align: center;
+    font-weight: bold;
+    font-size: 16px;
+
+    rotate: 270deg;
+}
+
+.hexagon:hover::before {
+    opacity: 0.95;
+}
+
+.btn.btn-main {
+    background-color: var(--primary);
+    color: #fff;
+    transition: all 0.1s linear;
+}
+
+.btn.btn-main:hover,
+.btn.btn-main:focus {
+    background-color: var(--primary-hover);
+}
+.btn.btn-outline {
+    padding: 4px 8px;
+
+    color: var(--primary);
+    background-color: white;
+    border: 1px solid var(--primary);
+    border-radius: 3px;
+
+    text-decoration: none;
+    letter-spacing: 0.16px;
+
+    transition: background-color 0.3s ease;
+}
+.btn.btn-outline:hover,
+.btn.btn-outline:focus {
+    background-color: var(--primary-hover) !important;
+    color: white !important;
+}
+.btn-disabled {
+    opacity: 0.5;
+    cursor: default !important;
+    pointer-events: none;
+}
+.table-heading > tr > th {
+    background: rgb(237 247 255) !important;
+    color: var(--text-primary-color);
+}
+
+.badge.badge-main {
+    background-image: linear-gradient(
+        90deg,
+        #f3b847 0%,
+        #f49846 100%
+    ) !important;
+}
+
+.table-wrapper {
+    max-width: 100%;
+    max-height: 500px;
+    overflow-x: auto; /* Nếu bạn chỉ muốn ẩn thanh cuộn ngang */
+    overflow-y: auto; /* Nếu bạn chỉ muốn ẩn thanh cuộn ngang */
+}
+
+.table-wrapper .table {
+    table-layout: fixed;
+    width: 100%;
+}
+
+.square-cell {
+    width: 100px;
+    height: 100px;
+    text-align: center;
+    vertical-align: middle;
+}
+.table-wrapper .table > tr > td {
+    border: 1px solid #dee2e6 !important;
+}
+.table-wrapper .table td > .small {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    margin: 0;
+    background-color: transparent;
+    font-size: 0.75rem;
+}
+p.small {
+    margin: 0;
+}
+.progress-text {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.progress {
+    flex: 1;
+}
+
+.progress .progress-bar {
+    text-align: center;
+    z-index: 60;
+    overflow: hidden;
+}
+
+.progress .progress-bar .progress-bar-value {
+    position: relative;
+    text-align: center;
+    color: #fff;
+    padding-left: 10px;
+    z-index: 70;
+}
+
+.progress > .progress-bar-value {
+    align-self: center;
+    position: absolute;
+    padding-left: 10px;
+    z-index: 50;
+    color: #38a7ff;
+}

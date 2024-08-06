@@ -11,6 +11,11 @@ use Illuminate\Http\Request;
 class TimekeepingController extends Controller
 {
     //
+    public function index()
+    {
+        return view('auth.timekeeping');
+    }
+
     public function TimeKeeping(Request $request)
     {
         if ($request->ajax()) {
@@ -31,7 +36,7 @@ class TimekeepingController extends Controller
                 ->first();
 
             // if employee had checkin and checkout in today
-            if(isset($timekeeping->check_in) && isset($timekeeping->check_out)){
+            if (isset($timekeeping->check_in) && isset($timekeeping->check_out)) {
                 return response()->json([
                     'status' => 'error',
                     'message' => 'đã checkin và checkout trong ngày hôm nay!'
@@ -39,7 +44,7 @@ class TimekeepingController extends Controller
             }
 
             // if employee had checkin
-            if(isset($timekeeping)){
+            if (isset($timekeeping)) {
                 $timekeeping->check_out = $currnetDateTime;
                 $timekeeping->save();
                 return response()->json([
@@ -57,7 +62,7 @@ class TimekeepingController extends Controller
             return response()->json([
                 'status' => 'checkin',
                 'message' => 'checkin thành công!'
-            ]);   
+            ]);
         }
     }
 }

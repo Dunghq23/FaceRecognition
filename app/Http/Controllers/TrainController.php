@@ -12,6 +12,12 @@ use Illuminate\Support\Facades\File;
 class TrainController extends Controller
 {
 
+    public function index()
+    {
+        $departments = Department::all();
+        return view('auth/trainface', compact('departments'));
+    }
+
     public function savePhoto(Request $request)
     {
         if ($request->ajax()) {
@@ -59,6 +65,7 @@ class TrainController extends Controller
         ini_set('max_execution_time', 300);
         if ($request->ajax()) {
             $username = $request->input('username');
+            $department_id = $request->input('deparment_id');
 
             // Kiểm tra và lấy đường dẫn chính xác của các file và script Python
             $pythonScriptPath = storage_path('app/python/FaceRecognition.py');
@@ -80,6 +87,12 @@ class TrainController extends Controller
                 exec($command, $output[], $returnVars[]);
             }
 
+            $clause = ['employee_name' => $username, 'fk_department_id' => $department_id];
+            $employee = Employee::where($clause)->get();
+            if (!isset($employee)) {
+                Employee::create($clause);
+            }
+
             return response()->json([
                 'status' => 'success',
                 'commands' => $commands,
@@ -98,7 +111,7 @@ class TrainController extends Controller
             $employee_name = $request->input('employee_name');
             $department_id = $request->input('deparment_id');
             $filePath = $request->input('filePath');
-            
+
             // process
             $directory = public_path('Storage/ImageUnknown');
             $imagePath = str_replace(asset(''), $directory, url($filePath));
@@ -111,11 +124,12 @@ class TrainController extends Controller
             $command = "python $pythonScriptPath encode_images $imagePath $encodingPath $employee_name";
             exec($command, $output, $returnVars);
 
-            if(!$returnVars){
-                Employee::create([
-                    'employee_name' => $employee_name,
-                    'fk_department_id' => $department_id
-                ]);
+            if (!$returnVars) {
+                $clause = ['employee_name' => $employee_name, 'fk_department_id' => $department_id];
+                $employee = Employee::where($clause)->get();
+                if (!isset($employee)) {
+                    Employee::create($clause);
+                }
 
                 return response()->json([
                     'status' => 'success',
@@ -203,6 +217,4 @@ class TrainController extends Controller
             abort(403, 'Unauthorized action.');
         }
     }
-
-
 }

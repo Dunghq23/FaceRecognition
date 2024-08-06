@@ -1,8 +1,8 @@
-@extends('layouts.main')
+@extends('layouts.master')
 
 @section('title', 'Huấn luyện')
 
-@section('custom-css')
+@push('css')
     <style>
         .wrapper {
             position: relative;
@@ -52,98 +52,110 @@
             object-fit: cover;
         }
     </style>
-@endsection
+@endpush
 
 @section('content')
-    <div style="height: 100vh;" id="app" class="">
-        <div class="container">
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="row mt-3">
+                <h4>Hướng dẫn huấn luyện khuôn mặt</h4>
+                {{-- <p>Bạn cần nhập username vào ô dữ liệu, sau đó nhấn huấn luyện. Hệ thống sẽ tự động chụp lấy 6 bức
+                    ảnh khuôn mặt của bạn và tiến hành nhận diện</p> --}}
+                <p>Mỗi một ảnh được chụp sẽ hiển thị bên cạnh khung hình video. Để dữ liệu khuôn mặt có tính xác
+                    thực hơn bạn nên chụp các góc mặt như hướng dẫn sau đây:</p>
+            </div>
             <div class="row">
-                <div class="col-md-2">
-                    <h4>Hướng dẫn huấn luyện khuôn mặt</h4>
-                    <p>Bạn cần nhập username vào ô dữ liệu, sau đó nhấn huấn luyện. Hệ thống sẽ tự động chụp lấy 6 bức
-                        ảnh khuôn mặt của bạn và tiến hành nhận diện</p>
-                    <p>Mỗi một ảnh được chụp sẽ hiển thị bên cạnh khung hình video. Để dữ liệu khuôn mặt có tính xác
-                        thực hơn bạn nên chụp các góc mặt như hướng dẫn sau đây:</p>
-                </div>
-                <div class="col-md-6">
-                    <div id="TrainFace">
-                        <div class="wrapper">
-                            <video style="" class="" id="video" autoplay class="img-fluid rounded"></video>
-                            <div class="messageInFrame text-white d-none">Thông điệp trên khung camera</div>
-                        </div>
-                        <canvas id="canvas" class="d-none"></canvas>
+                <div id="TrainFace">
+                    <div class="wrapper">
+                        <video class="w-100" id="video" autoplay class="img-fluid rounded"></video>
+                        <div class="messageInFrame text-white d-none">Thông điệp trên khung camera</div>
                     </div>
-                    <div class="controls">
+                    <canvas id="canvas" class="d-none"></canvas>
+                </div>
+                <div class="controls">
+                    <form id="trainForm">
                         <div class="input-group my-1">
-                            <input id="UsernameInput" type="text" class="form-control" placeholder="Username" required
-                                aria-label="Username" aria-describedby="basic-addon2">
-                            <div class="input-group-append">
-                                <button id="TrainButton" class="btn btn-outline-secondary">Huấn luyện</button>
-                            </div>
+                            <input id="UsernameInput" type="text" class="form-control" placeholder="Tên nhân viên" required
+                            minlength="6" maxlength="30" pattern="[a-zA-ZÀ-ỹ]+"
+                            title="Họ tên vui lòng không chứa ký tự dấu cách và chỉ chứa chữ cái!">
                         </div>
+                        <div class="mb-3">
+                            {{-- <label for="departments" class="form-label">Phòng ban</label> --}}
+                            <select class="form-select" id="departments">
+                                @foreach ($departments as $department)
+                                    <option value="{{ $department->department_id }}">{{ $department->department_name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <button type="submit" id="TrainButton" class="btn btn-outline-secondary">Huấn luyện</button>
                         <div class="message text-danger d-none">Vui lòng nhập Username</div>
-                    </div>
+                    </form>
                 </div>
-                <div class="col-md-4">
-                    <div class="row">
-                        <div class="col-md-6 pb-2">
-                            <img id="image1" class="img-thumbnail"
-                                src="https://i.pinimg.com/564x/70/89/b2/7089b2489fbc7915346cd60120a25e0a.jpg"
-                                alt="Ảnh không tồn tại!">
-                        </div>
-                        <div class="col-md-6 pb-2">
-                            <img id="image2" class="img-thumbnail"
-                                src="https://i.pinimg.com/564x/70/89/b2/7089b2489fbc7915346cd60120a25e0a.jpg"
-                                alt="Ảnh không tồn tại!">
-                        </div>
-                        <div class="col-md-6 pb-2">
-                            <img id="image3" class="img-thumbnail"
-                                src="https://i.pinimg.com/564x/70/89/b2/7089b2489fbc7915346cd60120a25e0a.jpg"
-                                alt="Ảnh không tồn tại!">
-                        </div>
-                        <div class="col-md-6 pb-2">
-                            <img id="image4" class="img-thumbnail"
-                                src="https://i.pinimg.com/564x/70/89/b2/7089b2489fbc7915346cd60120a25e0a.jpg"
-                                alt="Ảnh không tồn tại!">
-                        </div>
-                        <div class="col-md-6 pb-2">
-                            <img id="image5" class="img-thumbnail"
-                                src="https://i.pinimg.com/564x/70/89/b2/7089b2489fbc7915346cd60120a25e0a.jpg"
-                                alt="Ảnh không tồn tại!">
-                        </div>
-                        <div class="col-md-6 pb-2">
-                            <img id="image6" class="img-thumbnail"
-                                src="https://i.pinimg.com/564x/70/89/b2/7089b2489fbc7915346cd60120a25e0a.jpg"
-                                alt="Ảnh không tồn tại!">
-                        </div>
-                        <div class="col-md-6 pb-2">
-                            <img id="image7" class="img-thumbnail"
-                                src="https://i.pinimg.com/564x/70/89/b2/7089b2489fbc7915346cd60120a25e0a.jpg"
-                                alt="Ảnh không tồn tại!">
-                        </div>
-                        <div class="col-md-6 pb-2">
-                            <img id="image8" class="img-thumbnail"
-                                src="https://i.pinimg.com/564x/70/89/b2/7089b2489fbc7915346cd60120a25e0a.jpg"
-                                alt="Ảnh không tồn tại!">
-                        </div>
-                        <div class="col-md-6 pb-2">
-                            <img id="image9" class="img-thumbnail"
-                                src="https://i.pinimg.com/564x/70/89/b2/7089b2489fbc7915346cd60120a25e0a.jpg"
-                                alt="Ảnh không tồn tại!">
-                        </div>
-                        <div class="col-md-6 pb-2">
-                            <img id="image10" class="img-thumbnail"
-                                src="https://i.pinimg.com/564x/70/89/b2/7089b2489fbc7915346cd60120a25e0a.jpg"
-                                alt="Ảnh không tồn tại!">
-                        </div>
-                    </div>
-                </div>
-
             </div>
         </div>
+        <div class="col-md-6">
+            <div class="row">
+                <div class="col-md-6 pb-2">
+                    <img id="image1" class="img-thumbnail"
+                        src="https://i.pinimg.com/564x/70/89/b2/7089b2489fbc7915346cd60120a25e0a.jpg"
+                        alt="Ảnh không tồn tại!">
+                </div>
+                <div class="col-md-6 pb-2">
+                    <img id="image2" class="img-thumbnail"
+                        src="https://i.pinimg.com/564x/70/89/b2/7089b2489fbc7915346cd60120a25e0a.jpg"
+                        alt="Ảnh không tồn tại!">
+                </div>
+                <div class="col-md-6 pb-2">
+                    <img id="image3" class="img-thumbnail"
+                        src="https://i.pinimg.com/564x/70/89/b2/7089b2489fbc7915346cd60120a25e0a.jpg"
+                        alt="Ảnh không tồn tại!">
+                </div>
+                <div class="col-md-6 pb-2">
+                    <img id="image4" class="img-thumbnail"
+                        src="https://i.pinimg.com/564x/70/89/b2/7089b2489fbc7915346cd60120a25e0a.jpg"
+                        alt="Ảnh không tồn tại!">
+                </div>
+                <div class="col-md-6 pb-2">
+                    <img id="image5" class="img-thumbnail"
+                        src="https://i.pinimg.com/564x/70/89/b2/7089b2489fbc7915346cd60120a25e0a.jpg"
+                        alt="Ảnh không tồn tại!">
+                </div>
+                <div class="col-md-6 pb-2">
+                    <img id="image6" class="img-thumbnail"
+                        src="https://i.pinimg.com/564x/70/89/b2/7089b2489fbc7915346cd60120a25e0a.jpg"
+                        alt="Ảnh không tồn tại!">
+                </div>
+                <div class="col-md-6 pb-2">
+                    <img id="image7" class="img-thumbnail"
+                        src="https://i.pinimg.com/564x/70/89/b2/7089b2489fbc7915346cd60120a25e0a.jpg"
+                        alt="Ảnh không tồn tại!">
+                </div>
+                <div class="col-md-6 pb-2">
+                    <img id="image8" class="img-thumbnail"
+                        src="https://i.pinimg.com/564x/70/89/b2/7089b2489fbc7915346cd60120a25e0a.jpg"
+                        alt="Ảnh không tồn tại!">
+                </div>
+                <div class="col-md-6 pb-2">
+                    <img id="image9" class="img-thumbnail"
+                        src="https://i.pinimg.com/564x/70/89/b2/7089b2489fbc7915346cd60120a25e0a.jpg"
+                        alt="Ảnh không tồn tại!">
+                </div>
+                <div class="col-md-6 pb-2">
+                    <img id="image10" class="img-thumbnail"
+                        src="https://i.pinimg.com/564x/70/89/b2/7089b2489fbc7915346cd60120a25e0a.jpg"
+                        alt="Ảnh không tồn tại!">
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+        
 @endsection
 
 
-@push('scripts')
+@push('javascript')
     <script src="{{ asset('Assets/js/trainface.js') }}"></script>
 @endpush

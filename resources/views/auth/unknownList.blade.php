@@ -1,4 +1,4 @@
-@extends('layouts.main')
+@extends('layouts.master')
 
 @section('title', 'Danh sách khuôn mặt chưa biết')
 
@@ -81,7 +81,7 @@
 
 @endsection
 
-@push('scripts')
+@push('javascript')
     <script>
         $(document).ready(function() {
             var filePath;

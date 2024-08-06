@@ -20,14 +20,11 @@ $(document).ready(async function () {
         }
     }
 
-    $('#TrainButton').click(async function () {
-        const username = $('#UsernameInput').val();
-        if (username === '') {
-            $('.message').removeClass('d-none').addClass('d-block');
-            return;
-        }
 
-        $('.message').removeClass('d-block').addClass('d-none');
+    $('#trainForm').submit(async function (e) { 
+        e.preventDefault();
+        let username = $('#UsernameInput').val();
+        let deparment_id = $('#departments').val();
 
         try {
             await displayMessage('Vui lòng nhìn vào màn hình', 3);
@@ -160,10 +157,15 @@ $(document).ready(async function () {
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
                 },
-                data: { username },
+                data: { username, deparment_id },
                 success: function (response) {
-                    console.log(response.commands);
+                    // console.log(response.commands);
                     $('.messageInFrame').removeClass('d-flex').addClass('d-none');
+                    Swal.fire({
+                        title: "Thành công!",
+                        text: "Thêm dữ liệu nhân viên thành công",
+                        icon: "success"
+                    });
                 },
                 error: function (error) {
                     console.error('Lỗi:', error);

@@ -3,24 +3,16 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\TimekeepingController;
 use App\Http\Controllers\TrainController;
-use App\Models\Timekeeping;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
-});
-
-Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
-Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
-Route::post('/login-with-face', [AuthController::class, 'loginWithFace'])->name('login.with.face');
-
+    return view('home');
+})->name('home');
 
 // Huấn luyện khuôn mặt
 Route::post('/photo-train', [TrainController::class, 'TrainAllFace']);
-Route::get('/train-face', function () {
-    return view('auth/trainface');
-});
+Route::get('/train-face', [TrainController::class, 'index'])->name('trainface.index');
 Route::post('/save-photo-train', [TrainController::class, 'savePhoto']);
 Route::post('/photo-train-image', [TrainController::class, 'TrainFace']);
 
@@ -31,14 +23,13 @@ Route::get('/delete-images', [TrainController::class, 'deleteImages'])->name('de
 
 
 // Khuôn mặt chưa biết
-Route::get('/recognition-unknown-list', [TrainController::class, 'UnknownList']);
+Route::get('/recognition-unknown-list', [TrainController::class, 'UnknownList'])->name('recognition.index');
 Route::post('/delete-image', [TrainController::class, 'deleteImage'])->name('delete.image');
 
 
 // checkin checkout timekeeping
+Route::get('/timekeeping', [TimekeepingController::class, 'index'])->name('timekeeping.index');
 Route::post('/timekeeping', [TimekeepingController::class, 'timekeeping']);
-// Route::post('/checkin', [TimekeepingController::class, 'checkin']);
-// Route::post('/checkout', [TimekeepingController::class, 'checkout']);
 
 
 // Check Kết nối csdl
