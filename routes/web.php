@@ -31,6 +31,10 @@ Route::post('/delete-image', [TrainController::class, 'deleteImage'])->name('del
 Route::get('/timekeeping', [TimekeepingController::class, 'index'])->name('timekeeping.index');
 Route::post('/timekeeping', [TimekeepingController::class, 'timekeeping']);
 
+// statistic
+Route::get('/statistics', [TimekeepingController::class, 'StatisticsIndex'])->name('timekeeping.statistic');
+Route::post('/statistics', [TimekeepingController::class, 'statistics']);
+
 
 // Check Kết nối csdl
 Route::get('/check-db-connection', function () {

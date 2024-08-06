@@ -8,19 +8,22 @@
             </div>
             <div class="sidebar-group">
                 <h6 class="sidebar-title">Dữ liệu khuôn mặt</h6>
-                <a class="sidebar-item{{ Str::startsWith(request()->url(), url('/customers')) ? ' active' : '' }}"
+                <a class="sidebar-item{{ Str::startsWith(request()->url(), url('/train-face')) ? ' active' : '' }}"
                     href="{{route('trainface.index')}}">
                     <span>Thêm dữ liệu khuôn mặt</span>
                 </a>
-                <a class="sidebar-item{{ Str::startsWith(request()->url(), url('/rawMaterials')) ? ' active' : '' }}"
+                <a class="sidebar-item{{ Str::startsWith(request()->url(), url('/recognition-unknown-list')) ? ' active' : '' }}"
                     href="{{route('recognition.index')}}">
                     Khuôn mặt chưa được nhận diện
                 </a>
             </div>
             <div class="sidebar-group">
                 <h6 class="sidebar-title">Công việc</h6>
-                <a class="sidebar-item{{ Str::startsWith(request()->url(), url('/orderLocals/makes')) ? ' active' : '' }}"
+                <a class="sidebar-item{{ Str::startsWith(request()->url(), url('/timekeeping')) ? ' active' : '' }}"
                     href="{{route('timekeeping.index')}}"> Chấm công
+                </a>
+                <a class="sidebar-item{{ Str::startsWith(request()->url(), url('/statistic')) ? ' active' : '' }}"
+                    href="{{route('timekeeping.statistic')}}"> Thống kê
                 </a>
             </div>
         </div>

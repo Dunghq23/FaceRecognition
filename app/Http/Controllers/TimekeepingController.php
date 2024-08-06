@@ -13,7 +13,7 @@ class TimekeepingController extends Controller
     //
     public function index()
     {
-        return view('auth.timekeeping');
+        return view('timekeeping.timekeeping');
     }
 
     public function TimeKeeping(Request $request)
@@ -64,5 +64,15 @@ class TimekeepingController extends Controller
                 'message' => 'checkin thành công!'
             ]);
         }
+    }
+
+    public function StatisticsIndex()
+    {
+        return view('timekeeping.statistic');
+    }
+
+    public function Statistics()
+    {
+
     }
 }
