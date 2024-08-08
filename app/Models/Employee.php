@@ -18,4 +18,14 @@ class Employee extends Model
         'employee_name',
         'fk_department_id'
     ];
+
+    public function department()
+    {
+        return $this->belongsTo(Department::class, 'fk_department_id', 'department_id');
+    }
+
+    public function timekeepings()
+    {
+        return $this->hasMany(Timekeeping::class, 'fk_employee_id');
+    }
 }

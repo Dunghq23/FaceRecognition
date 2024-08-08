@@ -31,9 +31,13 @@ Route::post('/delete-image', [TrainController::class, 'deleteImage'])->name('del
 Route::get('/timekeeping', [TimekeepingController::class, 'index'])->name('timekeeping.index');
 Route::post('/timekeeping', [TimekeepingController::class, 'timekeeping']);
 
-// statistic
+// statistics
 Route::get('/statistics', [TimekeepingController::class, 'StatisticsIndex'])->name('timekeeping.statistic');
 Route::post('/statistics', [TimekeepingController::class, 'statistics']);
+
+// detail statistics
+Route::get('statistics/{employee_id}', [TimekeepingController::class, 'DetailStatisticIndex'])->name('timekeeping.statistic.detail');
+Route::post('/statisticsByEmployee', [TimekeepingController::class, 'StatisticsByEmployee']);
 
 
 // Check Kết nối csdl

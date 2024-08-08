@@ -19,4 +19,9 @@ class Timekeeping extends Model
         'check_in',
         'check_out'
     ];
+
+    public function employee()
+    {
+        return $this->belongsTo(Employee::class, 'fk_employee_id');
+    }
 }

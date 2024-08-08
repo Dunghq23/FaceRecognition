@@ -1,0 +1,41 @@
+.date-picker,
+.time-picker {
+    position: relative;
+    display: inline-block;
+}
+
+.date-picker-calendar,
+.time-picker-clock {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: white;
+    border: 1px solid #ccc;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    display: none;
+}
+
+.date-picker-calendar table,
+.time-picker-clock {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.date-picker-calendar td,
+.time-picker-clock td {
+    padding: 5px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.date-picker-calendar td:hover,
+.time-picker-clock td:hover {
+    background: #f0f0f0;
+}
+
+.date-picker-calendar td.selected,
+.time-picker-clock td.selected {
+    background: #007bff;
+    color: white;
+}
