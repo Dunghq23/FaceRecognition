@@ -268,7 +268,7 @@
                                 <td>${item['check_out']}</td>
                                 <td>${item['lately']}</td>
                                 <td>${item['early']}</td>
-                                <td>${item['day']}</td>
+                                <td>${item['labour']}</td>
                                 <td>${item['totalHours']}</td>
                             </tr>`;
                     tbbody.append(row);

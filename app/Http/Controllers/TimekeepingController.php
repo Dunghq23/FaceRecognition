@@ -166,10 +166,12 @@ class TimekeepingController extends Controller
                             $early = $date < $expectedEndDateTime ? $minutesEarly : 0;
 
                             $total = $this->calculateTotalHours($check_in, $check_out);
+                            $labour = $this->calculateLabour($timeStart, $timeEnd, $lately, $early);
                         } else {
                             $check_out = "Chưa thực hiện";
                             $early = 0;
                             $total = 0;
+                            $labour = 0;
                         }
                     } else {
                         $check_in = "";
@@ -177,6 +179,7 @@ class TimekeepingController extends Controller
                         $early = 0;
                         $lately = 0;
                         $total = 0;
+                        $labour = 0;
                     }
 
                     array_push($timekeepings, [
@@ -185,6 +188,7 @@ class TimekeepingController extends Controller
                         'check_out' => $check_out,
                         'lately' => $lately,
                         'early' => $early,
+                        'labour' => $labour,
                         'totalHours' => $total
                     ]);
                 } else {
@@ -194,6 +198,7 @@ class TimekeepingController extends Controller
                         'check_out' => "",
                         'lately' => 0,
                         'early' => 0,
+                        'labour' => 0,
                         'totalHours' => 0
                     ]);
                 }
@@ -213,17 +218,35 @@ class TimekeepingController extends Controller
         }
     }
 
-    function calculateTotalHours($timeCheckIn, $timeCheckOut) {
+    function calculateLabour($timeStart, $timeEnd, $latelyTime, $earlyTime)
+    {
+        $timeStart = new DateTime($timeStart);
+        $timeEnd = new DateTime($timeEnd);
+
+        $interval = $timeEnd->diff($timeStart);
+
+        // minutes have to work
+        $minutesWork = $interval->days * 24 * 60 + $interval->h * 60 + $interval->i;
+
+        // Sum the total minutes
+        $totalMinutes = $latelyTime + $earlyTime;
+
+        $labour = 1 - ($totalMinutes / $minutesWork);
+        return round($labour, 2);
+    }
+
+    function calculateTotalHours($timeCheckIn, $timeCheckOut)
+    {
         // Create DateTime objects from the input times
         $checkIn = new DateTime($timeCheckIn);
         $checkOut = new DateTime($timeCheckOut);
-    
+
         // Calculate the difference between the two DateTime objects
         $interval = $checkIn->diff($checkOut);
-    
+
         // Convert the difference to total hours
         $totalHours = $interval->days * 24 + $interval->h + $interval->i / 60 + $interval->s / 3600;
-    
+
         return round($totalHours, 2);
     }
 
