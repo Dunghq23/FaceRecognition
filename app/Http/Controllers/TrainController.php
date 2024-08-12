@@ -88,8 +88,8 @@ class TrainController extends Controller
             }
 
             $clause = ['employee_name' => $username, 'fk_department_id' => $department_id];
-            $employee = Employee::where($clause)->get();
-            if (!isset($employee)) {
+            $employee = Employee::where($clause)->first();
+            if (!$employee) {
                 Employee::create($clause);
             }
 
@@ -126,8 +126,8 @@ class TrainController extends Controller
 
             if (!$returnVars) {
                 $clause = ['employee_name' => $employee_name, 'fk_department_id' => $department_id];
-                $employee = Employee::where($clause)->get();
-                if (!isset($employee)) {
+                $employee = Employee::where($clause)->first();
+                if (!$employee) {
                     Employee::create($clause);
                 }
 
