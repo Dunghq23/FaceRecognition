@@ -3,7 +3,7 @@
 @section('title', 'Chấm công')
 
 @push('css')
-    <link rel="stylesheet" href="{{ asset('Assets/css/login.css')}}">
+    <link rel="stylesheet" href="{{ asset('Assets/css/login.css') }}">
 @endpush
 
 @section('content')
@@ -14,7 +14,7 @@
                     <div class="wrapper">
                         <video class="w-100" id="video" autoplay class="img-fluid rounded"></video>
                         <div id="loadingIndicator" class="d-none" style="text-align: center;">
-                            <img src="{{asset('Assets/images/loading.gif')}}" alt="Loading..." />
+                            <img src="{{ asset('Assets/images/loading.gif') }}" alt="Loading..." />
                         </div>
                     </div>
                     {{-- <div class="controls">
@@ -29,6 +29,11 @@
                     <canvas id="canvas" class="d-none"></canvas>
                 </div>
             </div>
+
+            <div class="col-md-6">
+                <img src="https://www.phucanh.vn/media/news/1809_BVmaychamcongnhandienkhuonmatuudiem.jpg"
+                    id="recognizedImage" class="w-100" alt="Recognized Image" />
+            </div>
         </div>
     </div>
 @endsection
@@ -36,7 +41,8 @@
 @push('javascript')
     <script>
         $(document).ready(function() {
-            // let stream;
+            var filePath;
+            var recogName;
 
             // Hàm bắt đầu camera
             async function startCamera() {
@@ -132,6 +138,7 @@
                     }),
                     success: function(response) {
                         console.log('Ảnh đã được lưu:', response.filepath);
+                        filePath = response.filepath;
                         recognizeFace(response.filepath);
                     },
                     error: function(xhr, status, error) {
@@ -160,6 +167,7 @@
                         if (name !== 'Unknown' && name !== 'Không có khuôn mặt được tìm thấy!' &&
                             name != 'Phát hiện 2 khuôn mặt, vui lòng thử lại!') {
                             TimeKeeping(name);
+                            recogName = name;
                         } else {
                             Swal.fire({
                                 title: "Cảnh báo!",
@@ -175,6 +183,11 @@
                     },
                     complete: function() {
                         $('#loadingIndicator').addClass('d-none');
+                        recogName = recogName ? recogName + '.jpg' : 'Unknown.jpg';
+                        let newFilePath = filePath.replace('.png', recogName);
+                        console.log(newFilePath);
+                        $('#recognizedImage').attr('src', newFilePath);
+                        recogName = undefined;
                     }
                 });
             }
