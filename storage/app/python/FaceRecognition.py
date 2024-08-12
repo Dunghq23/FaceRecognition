@@ -31,39 +31,6 @@ def load_encoding_file(file_path):
 
     return names, encodings
 
-def recognize_faces(image_path, names, encodings, output_file):
-    image = face_recognition.load_image_file(image_path)
-    face_locations = face_recognition.face_locations(image)
-    face_encodings = face_recognition.face_encodings(image, face_locations)
-
-    results = []
-    for (top, right, bottom, left), face_encoding in zip(face_locations, face_encodings):
-        matches = face_recognition.compare_faces(encodings, face_encoding, tolerance=0.3)
-        name = "Unknown"
-
-        if True in matches:
-            first_match_index = matches.index(True)
-            name = names[first_match_index]
-
-        results.append({"top": top, "right": right, "bottom": bottom, "left": left, "name": name})
-
-    if results:
-        try:
-            if len(results) > 1:
-                recognized_names = [result['name'] for result in results]
-                with open(output_file, 'w', encoding='utf-8') as file:
-                    file.write("Phát hiện 2 khuôn mặt, vui lòng thử lại!")
-            else:
-                recognized_name = results[0]['name']
-                print(recognized_name)
-                with open(output_file, 'w', encoding='utf-8') as file:
-                    file.write(recognized_name)
-        except Exception as e:
-            print(f"Lỗi khi thực thi script Python: {e}")
-    else:
-        with open(output_file, 'w', encoding='utf-8') as file:
-            file.write("Không có khuôn mặt được tìm thấy!")
-
 # def recognize_faces(image_path, names, encodings, output_file):
 #     image = face_recognition.load_image_file(image_path)
 #     face_locations = face_recognition.face_locations(image)
@@ -80,46 +47,88 @@ def recognize_faces(image_path, names, encodings, output_file):
 
 #         results.append({"top": top, "right": right, "bottom": bottom, "left": left, "name": name})
 
-#     # Load the image using PIL
-#     pil_image = Image.fromarray(image)
-#     draw = ImageDraw.Draw(pil_image)
-#     font = ImageFont.load_default()
-
-#     for result in results:
-#         top, right, bottom, left = result["top"], result["right"], result["bottom"], result["left"]
-#         name = result["name"]
-
-#         # Draw a box around the face
-#         draw.rectangle(((left, top), (right, bottom)), outline=(0, 0, 255), width=2)
-
-#         # Draw a label with a name below the face
-#         text_width, text_height = draw.textbbox((0, 0), name, font=font)[2:]
-#         draw.rectangle(((left, bottom - text_height - 10), (right, bottom)), fill=(0, 0, 255), outline=(0, 0, 255))
-#         draw.text((left + 6, bottom - text_height - 5), name, fill=(255, 255, 255, 255), font=font)
-
-#     # Save the image to the same directory
-#     output_image_path = os.path.splitext(image_path)[0] + "_recognized.jpg"
-#     pil_image.save(output_image_path)
-    
-#     # Print output path to verify
-#     print(f"Image saved at: {output_image_path}")
-
-#     if results:
-#         try:
-#             if len(results) > 1:
-#                 recognized_names = [result['name'] for result in results]
-#                 with open(output_file, 'w', encoding='utf-8') as file:
-#                     file.write("Phát hiện 2 khuôn mặt, vui lòng thử lại!")
+#     try:
+#         # Tạo hoặc mở file resultPath và ghi dữ liệu vào đó
+#         with open(output_file, "w", encoding="UTF-8") as file:
+#             if len(results) != 0:
+#                 try:
+#                     if len(results) > 1:
+#                         file.write("Phát hiện 2 khuôn mặt, vui lòng thử lại!")
+#                     else:
+#                         file.write(f"{results[0]['name']} ({results[0]['top']}, {results[0]['right']}, {results[0]['bottom']}, {results[0]['left']})")
+#                 except Exception as e:
+#                     file.write(f"Lỗi khi thực thi script Python: {e}")
 #             else:
-#                 recognized_name = results[0]['name']
-#                 print(recognized_name)
-#                 with open(output_file, 'w', encoding='utf-8') as file:
-#                     file.write(recognized_name)
-#         except Exception as e:
-#             print(f"Lỗi khi thực thi script Python: {e}")
-#     else:
-#         with open(output_file, 'w', encoding='utf-8') as file:
-#             file.write("Không có khuôn mặt được tìm thấy!")
+#                 file.write("Không có khuôn mặt được tìm thấy\n")
+#     except Exception as e:
+#         # Nếu xảy ra lỗi, ghi lỗi vào file
+#         with open(output_file, "w", encoding="UTF-8") as file:
+#             file.write(f"Lỗi khi thực thi script Python: {e}\n")
+
+def recognize_faces(image_path, names, encodings, output_file):
+    image = face_recognition.load_image_file(image_path)
+    face_locations = face_recognition.face_locations(image)
+    face_encodings = face_recognition.face_encodings(image, face_locations)
+
+    results = []
+    for (top, right, bottom, left), face_encoding in zip(face_locations, face_encodings):
+        matches = face_recognition.compare_faces(encodings, face_encoding, tolerance=0.3)
+        name = "Unknown"
+
+        if True in matches:
+            first_match_index = matches.index(True)
+            name = names[first_match_index]
+
+        results.append({"top": top, "right": right, "bottom": bottom, "left": left, "name": name})
+
+    # Load the image using PIL
+    pil_image = Image.fromarray(image)
+    draw = ImageDraw.Draw(pil_image)
+    font = ImageFont.load_default()
+
+    for result in results:
+        top, right, bottom, left = result["top"], result["right"], result["bottom"], result["left"]
+        name = result["name"]
+
+        if name == "Unknown":
+            box_color = (255, 0, 0)  # Màu đỏ
+            text_color = (255, 255, 255, 255)  # Màu trắng cho text
+        else:
+            box_color = (0, 0, 255)  # Màu xanh
+            text_color = (255, 255, 255, 255)  # Màu trắng cho text
+
+        # Vẽ hình chữ nhật quanh khuôn mặt
+        draw.rectangle(((left, top), (right, bottom)), outline=box_color, width=2)
+
+        # Vẽ nhãn tên bên dưới khuôn mặt
+        text_width, text_height = draw.textbbox((0, 0), name, font=font)[2:]
+        draw.rectangle(((left, bottom - text_height - 10), (right, bottom)), fill=box_color, outline=box_color)
+        draw.text((left + 6, bottom - text_height - 5), name, fill=text_color, font=font)
+
+    # Save the image to the same directory
+    output_image_path = os.path.splitext(image_path)[0] + f"{name}.jpg"
+    pil_image.save(output_image_path)
+    
+    # Print output path to verify
+    print(f"Image saved at: {output_image_path}")
+
+    try:
+        # Tạo hoặc mở file resultPath và ghi dữ liệu vào đó
+        with open(output_file, "w", encoding="UTF-8") as file:
+            if len(results) != 0:
+                try:
+                    if len(results) > 1:
+                        file.write("Phát hiện 2 khuôn mặt, vui lòng thử lại!")
+                    else:
+                        file.write(f"{results[0]['name']} ({results[0]['top']}, {results[0]['right']}, {results[0]['bottom']}, {results[0]['left']})")
+                except Exception as e:
+                    file.write(f"Lỗi khi thực thi script Python: {e}")
+            else:
+                file.write("Không có khuôn mặt được tìm thấy\n")
+    except Exception as e:
+        # Nếu xảy ra lỗi, ghi lỗi vào file
+        with open(output_file, "w", encoding="UTF-8") as file:
+            file.write(f"Lỗi khi thực thi script Python: {e}\n")
 
 
 def encode_images(image_path, encoding_file, username):

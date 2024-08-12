@@ -9,42 +9,82 @@ use Illuminate\Support\Facades\Storage;
 
 class AuthController extends Controller
 {
+    // public function savePhoto(Request $request)
+    // {
+    //     if ($request->ajax()) {
+    //         if ($request->has('imageBase64')) {
+    //             $imageData = $request->input('imageBase64');
+
+    //             // Chuẩn bị dữ liệu ảnh để giải mã
+    //             $imageData = str_replace('data:image/png;base64,', '', $imageData); // Loại bỏ phần header của base64
+    //             $imageData = str_replace(' ', '+', $imageData); // Thay thế các khoảng trắng
+
+    //             // Giải mã dữ liệu base64 thành dữ liệu nhị phân của ảnh
+    //             $imageBinary = base64_decode($imageData);
+
+    //             // Đường dẫn tới thư mục trong storage/app
+    //             $uploadPath = 'ImageRecognize/';
+
+    //             // Tạo thư mục nếu chưa tồn tại
+    //             if (!Storage::exists($uploadPath)) {
+    //                 // Storage::makeDirectory($uploadPath, 0777, true, true);
+    //                 Storage::makeDirectory($uploadPath);
+    //             }
+
+    //             // Tạo tên file duy nhất
+    //             $filename = 'photo_' . date('Y-m-d-H-i-s') . '.png';
+
+    //             // Lưu ảnh vào thư mục trong storage
+    //             Storage::put($uploadPath . $filename, $imageBinary);
+
+    //             // Lấy đường dẫn tuyệt đối của file đã lưu
+    //             $filePath = Storage::path($uploadPath . $filename);
+
+    //             // Trả về đường dẫn tuyệt đối
+    //             return response()->json(['filepath' => realpath($filePath)]);
+    //         } else {
+    //             return response()->json(['error' => 'Không có dữ liệu ảnh được gửi lên.'], 400);
+    //         }
+    //     }
+    // }
+
+
     public function savePhoto(Request $request)
     {
-        if ($request->ajax()) {
-            if ($request->has('imageBase64')) {
-                $imageData = $request->input('imageBase64');
+        if ($request->has('imageBase64')) {
+            $imageData = $request->input('imageBase64');
 
-                // Chuẩn bị dữ liệu ảnh để giải mã
-                $imageData = str_replace('data:image/png;base64,', '', $imageData); // Loại bỏ phần header của base64
-                $imageData = str_replace(' ', '+', $imageData); // Thay thế các khoảng trắng
+            // Chuẩn bị dữ liệu ảnh để giải mã
+            $imageData = str_replace('data:image/png;base64,', '', $imageData); // Loại bỏ phần header của base64
+            $imageData = str_replace(' ', '+', $imageData); // Thay thế các khoảng trắng
 
-                // Giải mã dữ liệu base64 thành dữ liệu nhị phân của ảnh
-                $imageBinary = base64_decode($imageData);
+            // Giải mã dữ liệu base64 thành dữ liệu nhị phân của ảnh
+            $imageBinary = base64_decode($imageData);
 
-                // Đường dẫn tới thư mục trong storage/app
-                $uploadPath = 'ImageRecognize/';
+            // Đường dẫn tới thư mục public/Storage
+            $uploadPath = public_path('Storage/'); // Lưu trong thư mục public/Storage
 
-                // Tạo thư mục nếu chưa tồn tại
-                if (!Storage::exists($uploadPath)) {
-                    // Storage::makeDirectory($uploadPath, 0777, true, true);
-                    Storage::makeDirectory($uploadPath);
-                }
-
-                // Tạo tên file duy nhất
-                $filename = 'photo_' . date('Y-m-d-H-i-s') . '.png';
-
-                // Lưu ảnh vào thư mục trong storage
-                Storage::put($uploadPath . $filename, $imageBinary);
-
-                // Lấy đường dẫn tuyệt đối của file đã lưu
-                $filePath = Storage::path($uploadPath . $filename);
-
-                // Trả về đường dẫn tuyệt đối
-                return response()->json(['filepath' => realpath($filePath)]);
-            } else {
-                return response()->json(['error' => 'Không có dữ liệu ảnh được gửi lên.'], 400);
+            // Tạo thư mục nếu chưa tồn tại
+            if (!file_exists($uploadPath)) {
+                mkdir($uploadPath, 0777, true); // Tạo thư mục với quyền 0777
             }
+
+            // Tạo tên file duy nhất
+            $filename = 'photo_' . date('Y-m-d-H-i-s') . '.png';
+
+            // Đường dẫn tuyệt đối của file
+            $filePath = $uploadPath . $filename;
+
+            // Lưu ảnh vào thư mục public/Storage
+            file_put_contents($filePath, $imageBinary);
+
+            // Lấy đường dẫn URL của file đã lưu
+            $publicPath = 'Storage/' . $filename;
+
+            // Trả về đường dẫn URL
+            return response()->json(['filepath' => $publicPath]);
+        } else {
+            return response()->json(['error' => 'Không có dữ liệu ảnh được gửi lên.'], 400);
         }
     }
 
@@ -74,7 +114,9 @@ class AuthController extends Controller
 
                 // Đọc kết quả từ file output
                 if (file_exists($outputPath)) {
-                    $recognizedName = trim(file_get_contents($outputPath));
+                    $fullString = trim(file_get_contents($outputPath));
+                    $parts = explode(' ', $fullString, 2);
+                    $recognizedName = $parts[0];
 
                     if ($recognizedName === 'Unknown') {
                         // Nếu nhận dạng là "Unknown", di chuyển ảnh vào thư mục public/Storage/ImageUnknown

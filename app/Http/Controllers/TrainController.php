@@ -150,6 +150,9 @@ class TrainController extends Controller
     {
         // Lấy danh sách các tệp tin từ thư mục public/Storage/ImageUnknown
         $directory = public_path('Storage/ImageUnknown');
+        if (!is_dir($directory)) {
+            mkdir($directory, 0755, true);
+        }
         $files = scandir($directory);
 
         // Khởi tạo mảng để lưu danh sách nhận dạng chưa biết
