@@ -26,6 +26,12 @@
                     href="{{route('timekeeping.statistic')}}"> Thống kê
                 </a>
             </div>
+            <div class="sidebar-group">
+                <h6 class="sidebar-title">Quản lý</h6>
+                <a class="sidebar-item{{ Str::startsWith(request()->url(), url('/manager/department')) ? ' active' : '' }}"
+                    href="{{route('admin.department.index')}}"> Phòng ban
+                </a>
+            </div>
         </div>
     </nav>
 </div>
