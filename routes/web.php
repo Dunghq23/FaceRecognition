@@ -2,7 +2,10 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\TimekeepingController;
+use App\Http\Controllers\Admin\DepartmentController;
+use App\Http\Controllers\Admin\HumanResourceController;
 use App\Http\Controllers\TrainController;
+
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
@@ -62,4 +65,27 @@ Route::get('/check-db-connection', function () {
     // } else {
     //     echo "Connected successfully!";
     // }
+});
+
+
+
+// Quản lý 
+Route::prefix('admin')->name('admin.')->group(function () {
+    // DepartmentController (Quản lý phòng ban)
+    Route::get('/department', [DepartmentController::class, 'index'])->name('department.index');
+    Route::get('/department/create', [DepartmentController::class, 'create'])->name('department.create');
+    Route::post('/department', [DepartmentController::class, 'store'])->name('department.store');
+    Route::get('/department/{id}', [DepartmentController::class, 'show'])->name('department.show');
+    Route::get('/department/{id}/edit', [DepartmentController::class, 'edit'])->name('department.edit');
+    Route::put('/department/{id}', [DepartmentController::class, 'update'])->name('department.update');
+    Route::delete('/department/{id}', [DepartmentController::class, 'destroy'])->name('department.destroy');
+
+    // HumanResourceController (Quản lý nhân sự)
+    // Route::get('/human-resource', [HumanResourceController::class, 'index'])->name('humanResource.index');
+    // Route::get('/human-resource/create', [HumanResourceController::class, 'create'])->name('humanResource.create');
+    // Route::post('/human-resource', [HumanResourceController::class, 'store'])->name('humanResource.store');
+    // Route::get('/human-resource/{id}', [HumanResourceController::class, 'show'])->name('humanResource.show');
+    // Route::get('/human-resource/{id}/edit', [HumanResourceController::class, 'edit'])->name('humanResource.edit');
+    // Route::put('/human-resource/{id}', [HumanResourceController::class, 'update'])->name('humanResource.update');
+    // Route::delete('/human-resource/{id}', [HumanResourceController::class, 'destroy'])->name('humanResource.destroy');
 });
