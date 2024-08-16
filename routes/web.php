@@ -3,7 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\TimekeepingController;
 use App\Http\Controllers\Admin\DepartmentController;
-use App\Http\Controllers\Admin\HumanResourceController;
+use App\Http\Controllers\Admin\EmployeeController;
 use App\Http\Controllers\TrainController;
 
 use Illuminate\Support\Facades\DB;
@@ -80,12 +80,16 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::put('/department/{id}', [DepartmentController::class, 'update'])->name('department.update');
     Route::delete('/department/{id}', [DepartmentController::class, 'destroy'])->name('department.destroy');
 
-    // HumanResourceController (Quản lý nhân sự)
-    // Route::get('/human-resource', [HumanResourceController::class, 'index'])->name('humanResource.index');
-    // Route::get('/human-resource/create', [HumanResourceController::class, 'create'])->name('humanResource.create');
-    // Route::post('/human-resource', [HumanResourceController::class, 'store'])->name('humanResource.store');
-    // Route::get('/human-resource/{id}', [HumanResourceController::class, 'show'])->name('humanResource.show');
-    // Route::get('/human-resource/{id}/edit', [HumanResourceController::class, 'edit'])->name('humanResource.edit');
-    // Route::put('/human-resource/{id}', [HumanResourceController::class, 'update'])->name('humanResource.update');
-    // Route::delete('/human-resource/{id}', [HumanResourceController::class, 'destroy'])->name('humanResource.destroy');
+    // EmployeeController (Quản lý nhân viên)
+    Route::get('/employee', [EmployeeController::class, 'index'])->name('employee.index');
+    Route::get('/employee/create', [EmployeeController::class, 'create'])->name('employee.create');
+    Route::post('/employee', [EmployeeController::class, 'store'])->name('employee.store');
+    Route::get('/employee/{id}', [EmployeeController::class, 'show'])->name('employee.show');
+    Route::get('/employee/{id}/edit', [EmployeeController::class, 'edit'])->name('employee.edit');
+    Route::patch('/employee/{id}', [EmployeeController::class, 'update'])->name('employee.update');
+    Route::delete('/employee/{id}', [EmployeeController::class, 'destroy'])->name('employee.destroy');
+
+    Route::get('/employees-by-department/{id}', [EmployeeController::class, 'getEmployeesByDepartment']);
+
+
 });
