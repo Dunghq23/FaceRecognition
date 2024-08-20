@@ -75,10 +75,10 @@
                 </div>
                 <div class="controls">
                     <form id="trainForm">
-                        <div class="input-group my-1">
-                            <input id="UsernameInput" type="text" class="form-control" placeholder="Tên nhân viên" required
-                            minlength="6" maxlength="30" pattern="[a-zA-ZÀ-ỹ]+"
-                            title="Họ tên vui lòng không chứa ký tự dấu cách và chỉ chứa chữ cái!">
+                        <div class="mt-3 mb-2">
+                            <select class="form-select" id="employees">
+                                
+                            </select>
                         </div>
                         <div class="mb-3">
                             {{-- <label for="departments" class="form-label">Phòng ban</label> --}}
@@ -158,4 +158,5 @@
 
 @push('javascript')
     <script src="{{ asset('Assets/js/trainface.js') }}"></script>
+    <script src="{{ asset('Assets/js/department.js') }}"></script>
 @endpush

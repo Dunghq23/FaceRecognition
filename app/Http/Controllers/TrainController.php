@@ -64,8 +64,8 @@ class TrainController extends Controller
     {
         ini_set('max_execution_time', 300);
         if ($request->ajax()) {
-            $username = $request->input('username');
-            $department_id = $request->input('deparment_id');
+            $employee_id = $request->input('employee_id');
+            $employee_name = Employee::find($employee_id)->value('employee_name');
 
             // Kiểm tra và lấy đường dẫn chính xác của các file và script Python
             $pythonScriptPath = storage_path('app/python/FaceRecognition.py');
@@ -78,19 +78,13 @@ class TrainController extends Controller
 
             for ($i = 1; $i <= 50; $i++) {
                 $imagePath = $publicPath . '/photo_' . $i . '.png';
-                $command = escapeshellcmd("py $pythonScriptPath encode_images $imagePath $encodingPath $username");
+                $command = escapeshellcmd("py $pythonScriptPath encode_images $imagePath $encodingPath $employee_name");
 
                 // Lưu lệnh vào mảng để trả về sau
                 $commands[] = $command;
 
                 // Thực hiện lệnh và lưu kết quả
                 exec($command, $output[], $returnVars[]);
-            }
-
-            $clause = ['employee_name' => $username, 'fk_department_id' => $department_id];
-            $employee = Employee::where($clause)->first();
-            if (!$employee) {
-                Employee::create($clause);
             }
 
             return response()->json([

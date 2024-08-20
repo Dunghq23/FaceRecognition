@@ -282,6 +282,8 @@
                 Statistics();
             })
 
+            $('#btn-statistics').trigger('click');
+
             $(document).on('click', '.btn-detail', function() {
                 let employee_id = $(this).data('employee-id');
                 let timeStart = $('#timeStart').val();
