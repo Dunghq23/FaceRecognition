@@ -89,6 +89,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::patch('/employee/{id}', [EmployeeController::class, 'update'])->name('employee.update');
     Route::delete('/employee/{id}', [EmployeeController::class, 'destroy'])->name('employee.destroy');
 
+    // ajax
+    Route::post('/getEmployeesByDepartment', [EmployeeController::class, 'getEmployeesByDepartmentAjax']);
+
     Route::get('/employees-by-department/{id}', [EmployeeController::class, 'getEmployeesByDepartment']);
 
 

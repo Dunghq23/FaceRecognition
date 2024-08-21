@@ -188,4 +188,15 @@ class EmployeeController extends Controller
         // return view('components.employee-row', ['employees' => $employees])->render();
     }
 
+    public function getEmployeesByDepartmentAjax(Request $request) 
+    {
+        if($request->ajax()){
+            $department_id = $request->input('department_id');
+            $department = Department::find($department_id);
+            $employees = $department->employees()->get();
+            return response()->json([
+                'employees' => $employees
+            ]);
+        }
+    }
 }
