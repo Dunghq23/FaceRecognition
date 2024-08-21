@@ -31,7 +31,7 @@ Route::post('/delete-image', [TrainController::class, 'deleteImage'])->name('del
 
 
 // checkin checkout timekeeping
-Route::get('/timekeeping', [TimekeepingController::class, 'index'])->name('timekeeping.index')->middleware('check.ip');;
+Route::get('/timekeeping', [TimekeepingController::class, 'index'])->name('timekeeping.index')->middleware('check.ip');
 Route::post('/timekeeping', [TimekeepingController::class, 'timekeeping']);
 
 // statistics

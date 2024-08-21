@@ -91,7 +91,7 @@ class EmployeeController extends Controller
             'start_date' => 'nullable|date',
             'salary' => 'nullable|numeric',
             'employment_status' => 'nullable|boolean',
-            'profile_picture' => 'nullable|string|max:255',
+            'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'notes' => 'nullable|string',
         ]);
 
@@ -107,12 +107,11 @@ class EmployeeController extends Controller
             if ($employee->profile_picture && file_exists(public_path($employee->profile_picture))) {
                 unlink(public_path($employee->profile_picture));
             }
-
-            // Cập nhật đường dẫn ảnh mới vào database
-            $employee->profile_picture = 'profile_pictures/' . $imageName;
         }
 
         $employee->update($request->all());
+        $employee->profile_picture = 'profile_pictures/' . $imageName;
+        $employee->save();
 
         return redirect()->route('admin.employee.index')->with('success', 'Nhân viên đã được cập nhật thành công.');
     }
