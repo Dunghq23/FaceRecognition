@@ -64,7 +64,8 @@
                     </div>
                 @endif
 
-                <form action="{{ route('admin.employee.update', $employee->employee_id) }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('admin.employee.update', $employee->employee_id) }}" method="POST"
+                    enctype="multipart/form-data">
                     @csrf
                     @method('PATCH')
 
@@ -235,5 +236,24 @@
     @endsection
 
     @push('javascript')
-        <!-- Thêm bất kỳ JavaScript tùy chỉnh nào ở đây nếu cần -->
+        <script>
+            function previewImage(event) {
+                const input = event.target;
+                const preview = document.getElementById('image_preview');
+
+                if (input.files && input.files[0]) {
+                    const reader = new FileReader();
+
+                    reader.onload = function(e) {
+                        preview.src = e.target.result;
+                        preview.style.display = 'block';
+                    }
+
+                    reader.readAsDataURL(input.files[0]);
+                } else {
+                    preview.src = '';
+                    preview.style.display = 'none';
+                }
+            }
+        </script>
     @endpush

@@ -61,7 +61,7 @@
                         <div class="form-group w-100 d-flex justify-content-center p-3">
                             <div class="image-preview">
                                 @if ($employee->profile_picture != null)
-                                    <img id="image_preview" src="{{ $employee->profile_picture }}" alt="Ảnh đại diện">
+                                    <img id="image_preview" src="{{ asset($employee->profile_picture) }}" alt="Ảnh đại diện">
                                 @else
                                     <img id="image_preview" src="https://cdn-icons-png.freepik.com/512/219/219986.png"
                                         alt="Ảnh đại diện">
