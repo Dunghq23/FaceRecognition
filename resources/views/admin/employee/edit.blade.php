@@ -101,7 +101,7 @@
                                         <label for="employee_username">Username</label>
                                         <input type="text" class="form-control" id="employee_username"
                                             name="employee_username" placeholder="angvan"
-                                            value="{{ $employee->employee_username }}" required>
+                                            value="{{ $employee->employee_username }}" required readonly>
                                     </div>
                                 </div>
                                 <div class="col-md-4">
