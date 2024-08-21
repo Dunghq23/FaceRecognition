@@ -25,7 +25,7 @@ class TimekeepingController extends Controller
             $employee_name = $request->input('employee_name');
 
             // get current employee_id accessing
-            $employee_id = Employee::where('employee_name', $employee_name)->value('employee_id');
+            $employee_id = Employee::where('employee_username', $employee_name)->value('employee_id');
 
             // get current date and time
             $timezone = new DateTimeZone('Asia/Bangkok'); // UTC+7 timezone
