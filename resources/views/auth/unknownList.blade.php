@@ -56,11 +56,11 @@
                 </div>
                 <div class="modal-body">
                     <form id="trainForm">
-                        <div class="mb-3">
-                            <label for="employee_name" class="form-label">Tên nhân viên</label>
-                            <input type="text" class="form-control" id="employee_name" name="employee_name" required
-                                minlength="6" maxlength="30" pattern="[a-zA-ZÀ-ỹ]+"
-                                title="Họ tên vui lòng không chứa ký tự dấu cách và chỉ chứa chữ cái!">
+                        <label for="departments" class="form-label">Nhân viên</label>
+                        <div class="mb-2">
+                            <select class="form-select" id="employees">
+                                
+                            </select>
                         </div>
                         <div class="mb-3">
                             <label for="departments" class="form-label">Phòng ban</label>
@@ -82,96 +82,6 @@
 @endsection
 
 @push('javascript')
-    <script>
-        $(document).ready(function() {
-            var filePath;
-            $('.btn-delete').click(function(e) {
-                e.preventDefault();
-                filePath = $(this).data('file');
-                var token = "{{ csrf_token() }}";
-
-                $.ajax({
-                    url: "{{ route('delete.image') }}",
-                    type: 'POST',
-                    dataType: 'json',
-                    data: {
-                        _token: token,
-                        filePath: filePath // Chắc chắn rằng đường dẫn được gửi đi đúng định dạng
-                    },
-                    success: function(response) {
-                        if (response.success) {
-                            // Tải lại danh sách sau khi xóa thành công
-                            location.reload();
-                        } else {
-                            console.error(response.error);
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        console.error(xhr.responseText);
-                        // Xử lý lỗi
-                    }
-                });
-            });
-
-
-            // Xử lý sự kiện huấn luyện
-            $('.btn-train').click(function() {
-                var recognitionId = $(this).closest('tr').find('td:first').text();
-                $('#recognitionId').val(recognitionId);
-                filePath = $(this).data('file');
-            });
-
-            // Xử lý sự kiện huấn luyện
-            $('#trainForm').submit(function(e) {
-                e.preventDefault();
-                let employee_name = $('#employee_name').val();
-                let deparment_id = $('#departments').val();
-
-                $.ajax({
-                    url: '/photo-train-image', // Đường dẫn xử lý huấn luyện
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-                    },
-                    data: {
-                        employee_name: employee_name,
-                        deparment_id: deparment_id,
-                        filePath: filePath
-                    },
-                    success: function(response) {
-                        // console.log(response);
-                        const Toast = Swal.mixin({
-                            toast: true,
-                            position: "top-end",
-                            showConfirmButton: false,
-                            timer: 3000,
-                            timerProgressBar: true,
-                            didOpen: (toast) => {
-                                toast.onmouseenter = Swal.stopTimer;
-                                toast.onmouseleave = Swal.resumeTimer;
-                            }
-                        });
-
-                        if (response['status'] == 'success') {
-                            Toast.fire({
-                                icon: "success",
-                                title: response['message']
-                            });
-                        } else {
-                            Toast.fire({
-                                icon: "error",
-                                title: response['message']
-                            });
-                        }
-
-                        $('#trainModal').modal('hide');
-                        // location.reload();
-                    },
-                    error: function(error) {
-                        console.error('Lỗi:', error);
-                    }
-                });
-            });
-        });
-    </script>
+    <script src="{{asset('Assets/js/department.js')}}"></script>
+    <script src="{{asset('Assets/js/trainUnknown.js')}}"></script>
 @endpush

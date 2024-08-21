@@ -103,9 +103,11 @@ class TrainController extends Controller
     {
         if ($request->ajax()) {
             // get value from form
-            $employee_name = $request->input('employee_name');
-            $department_id = $request->input('deparment_id');
+            $employee_id = $request->input('employee_id');
             $filePath = $request->input('filePath');
+
+            $employee = Employee::where('employee_id', $employee_id)->first();
+            $employee_username = $employee->employee_username;
 
             // process
             $directory = public_path('Storage/ImageUnknown');
@@ -116,16 +118,10 @@ class TrainController extends Controller
             $pythonScriptPath = storage_path('app/python/FaceRecognition.py');
             $encodingPath = storage_path('app/models/encodings.txt');
 
-            $command = "python $pythonScriptPath encode_images $imagePath $encodingPath $employee_name";
+            $command = "python $pythonScriptPath encode_images $imagePath $encodingPath $employee_username";
             exec($command, $output, $returnVars);
 
             if (!$returnVars) {
-                $clause = ['employee_name' => $employee_name, 'fk_department_id' => $department_id];
-                $employee = Employee::where($clause)->first();
-                if (!$employee) {
-                    Employee::create($clause);
-                }
-
                 return response()->json([
                     'status' => 'success',
                     'commands' => $command,
