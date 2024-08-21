@@ -110,8 +110,10 @@ class EmployeeController extends Controller
         }
 
         $employee->update($request->all());
-        $employee->profile_picture = 'profile_pictures/' . $imageName;
-        $employee->save();
+        if ($request->hasFile('profile_picture')) {
+            $employee->profile_picture = 'profile_pictures/' . $imageName;
+            $employee->save();
+        }
 
         return redirect()->route('admin.employee.index')->with('success', 'Nhân viên đã được cập nhật thành công.');
     }
@@ -187,9 +189,9 @@ class EmployeeController extends Controller
         // return view('components.employee-row', ['employees' => $employees])->render();
     }
 
-    public function getEmployeesByDepartmentAjax(Request $request) 
+    public function getEmployeesByDepartmentAjax(Request $request)
     {
-        if($request->ajax()){
+        if ($request->ajax()) {
             $department_id = $request->input('department_id');
             $department = Department::find($department_id);
             $employees = $department->employees()->get();
