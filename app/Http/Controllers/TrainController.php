@@ -87,6 +87,14 @@ class TrainController extends Controller
                 exec($command, $output[], $returnVars[]);
             }
 
+            // Lấy tất cả các tệp tin trong thư mục
+            $files = File::files($publicPath);
+
+            // Duyệt và xóa từng tệp tin
+            foreach ($files as $file) {
+                File::delete($file);
+            }
+
             return response()->json([
                 'status' => 'success',
                 'commands' => $commands,

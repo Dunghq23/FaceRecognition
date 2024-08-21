@@ -58,7 +58,7 @@ class EmployeeController extends Controller
 
         // Đảm bảo rằng các giá trị bit cho 'gender' và 'employment_status' được đặt đúng cách
         $data = $request->all();
-        $data['profile_picture'] = "public/" . $profilePicturePath;
+        $data['profile_picture'] = $profilePicturePath;
         $data['gender'] = $request->has('gender') ? (bool) $request->input('gender') : null;
         $data['employment_status'] = $request->has('employment_status') ? (bool) $request->input('employment_status') : null;
 
