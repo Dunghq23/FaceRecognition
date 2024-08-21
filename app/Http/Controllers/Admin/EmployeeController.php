@@ -35,18 +35,30 @@ class EmployeeController extends Controller
             'phone_number' => 'nullable|string|max:15',
             'address' => 'nullable|string|max:255',
             'date_of_birth' => 'nullable|date',
-            'gender' => 'nullable|boolean', // Sửa từ 'int' thành 'boolean'
+            'gender' => 'nullable|boolean',
             'position' => 'nullable|string|max:50',
             'fk_department_id' => 'required|exists:departments,department_id',
             'start_date' => 'nullable|date',
             'salary' => 'nullable|numeric',
-            'employment_status' => 'nullable|boolean', // Sửa từ 'int' thành 'boolean'
-            'profile_picture' => 'nullable|string|max:255',
+            'employment_status' => 'nullable|boolean',
+            'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'notes' => 'nullable|string',
         ]);
 
+        if ($request->hasFile('profile_picture')) {
+            // Lưu file vào thư mục public/profile_pictures
+            $imageName = time() . '.' . $request->profile_picture->extension();
+            $request->profile_picture->move(public_path('profile_pictures'), $imageName);
+
+            // Lưu đường dẫn ảnh vào cơ sở dữ liệu
+            $profilePicturePath = 'profile_pictures/' . $imageName;
+        } else {
+            $profilePicturePath = null;
+        }
+
         // Đảm bảo rằng các giá trị bit cho 'gender' và 'employment_status' được đặt đúng cách
         $data = $request->all();
+        $data['profile_picture'] = "public/" . $profilePicturePath;
         $data['gender'] = $request->has('gender') ? (bool) $request->input('gender') : null;
         $data['employment_status'] = $request->has('employment_status') ? (bool) $request->input('employment_status') : null;
 
@@ -84,6 +96,22 @@ class EmployeeController extends Controller
         ]);
 
         $employee = Employee::findOrFail($id);
+
+        // Kiểm tra và xử lý ảnh avatar mới nếu người dùng upload
+        if ($request->hasFile('profile_picture')) {
+            // Lưu ảnh mới vào thư mục public/profile_pictures
+            $imageName = time() . '.' . $request->profile_picture->extension();
+            $request->profile_picture->move(public_path('profile_pictures'), $imageName);
+
+            // Xóa ảnh cũ nếu có (không bắt buộc)
+            if ($employee->profile_picture && file_exists(public_path($employee->profile_picture))) {
+                unlink(public_path($employee->profile_picture));
+            }
+
+            // Cập nhật đường dẫn ảnh mới vào database
+            $employee->profile_picture = 'profile_pictures/' . $imageName;
+        }
+
         $employee->update($request->all());
 
         return redirect()->route('admin.employee.index')->with('success', 'Nhân viên đã được cập nhật thành công.');
