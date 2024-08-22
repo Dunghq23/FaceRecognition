@@ -1,29 +1,52 @@
 $(document).ready(function() {
+
+    function ShowToast(message, type) {
+        const Toast = Swal.mixin({
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.onmouseenter = Swal.stopTimer;
+                toast.onmouseleave = Swal.resumeTimer;
+            }
+        });
+        Toast.fire({
+            icon: type,
+            title: message
+        });
+    }
+
     var filePath;
+    var rowDelete;
     $('.btn-delete').click(function(e) {
         e.preventDefault();
         filePath = $(this).data('file');
-        var token = "{{ csrf_token() }}";
-
+        rowDelete = $(this).closest('tr');
+        $('#cover-spin').show(0);
         $.ajax({
-            url: "{{ route('delete.image') }}",
-            type: 'POST',
-            dataType: 'json',
+            url: "/delete-image",
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+            },
             data: {
-                _token: token,
                 filePath: filePath // Chắc chắn rằng đường dẫn được gửi đi đúng định dạng
             },
             success: function(response) {
                 if (response.success) {
-                    // Tải lại danh sách sau khi xóa thành công
-                    location.reload();
+                    setTimeout(function() {
+                        rowDelete.remove();
+                        $('#cover-spin').hide(0);
+                        ShowToast(response['success'], "success");
+                    }, 1000);
                 } else {
                     console.error(response.error);
                 }
             },
             error: function(xhr, status, error) {
-                console.error(xhr.responseText);
-                // Xử lý lỗi
+                ShowToast("Đã có lỗi xảy ra!", "error");
             }
         });
     });
@@ -34,6 +57,7 @@ $(document).ready(function() {
         var recognitionId = $(this).closest('tr').find('td:first').text();
         $('#recognitionId').val(recognitionId);
         filePath = $(this).data('file');
+        rowDelete = $(this).closest('tr');
     });
 
     // Xử lý sự kiện huấn luyện
@@ -45,7 +69,7 @@ $(document).ready(function() {
             ShowToast("Vui lòng chọn nhân viên phù hợp!", "error");
             return;
         }
-
+        $('#cover-spin').show(0);
         $.ajax({
             url: '/photo-train-image', // Đường dẫn xử lý huấn luyện
             method: 'POST',
@@ -58,35 +82,15 @@ $(document).ready(function() {
             },
             success: function(response) {
                 // console.log(response);
-                const Toast = Swal.mixin({
-                    toast: true,
-                    position: "top-end",
-                    showConfirmButton: false,
-                    timer: 3000,
-                    timerProgressBar: true,
-                    didOpen: (toast) => {
-                        toast.onmouseenter = Swal.stopTimer;
-                        toast.onmouseleave = Swal.resumeTimer;
-                    }
-                });
-
-                if (response['status'] == 'success') {
-                    Toast.fire({
-                        icon: "success",
-                        title: response['message']
-                    });
-                } else {
-                    Toast.fire({
-                        icon: "error",
-                        title: response['message']
-                    });
-                }
-
                 $('#trainModal').modal('hide');
-                // location.reload();
+                setTimeout(function() {
+                    rowDelete.remove();
+                    $('#cover-spin').hide(0);
+                    ShowToast(response['message'], response['status']);
+                }, 1500);
             },
             error: function(error) {
-                console.error('Lỗi:', error);
+                ShowToast("Đã có lỗi xảy ra!", "error");
             }
         });
     });

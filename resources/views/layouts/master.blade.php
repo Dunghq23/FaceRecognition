@@ -70,7 +70,6 @@
     <script src="{{ asset('Assets/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('Assets/js/jquery-3.7.0.min.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    {{-- <script src="{{ asset('Assets/js/moment.js')}}"></script> --}}
     <script src="{{ asset('Assets/js/datetimepicker.js') }}"></script>
     <script src="https://unpkg.com/gijgo@1.9.14/js/gijgo.min.js" type="text/javascript"></script>
     @stack('javascript')

@@ -78,6 +78,7 @@
             </div>
         </div>
     </div>
+    <div id="cover-spin"></div>
 
 @endsection
 
