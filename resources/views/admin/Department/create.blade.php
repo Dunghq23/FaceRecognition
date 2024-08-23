@@ -17,10 +17,16 @@
         </div>
     @endif
 
+    @if(session('error'))
+        <div class="alert alert-danger">
+            {{ session('error') }}
+        </div>
+    @endif
+
     <!-- Form thêm phòng ban -->
     <form action="{{ route('admin.department.store') }}" method="POST">
         @csrf
-
+    
         <div class="mb-3">
             <label for="department_name" class="form-label">Tên Phòng Ban</label>
             <input type="text" class="form-control @error('department_name') is-invalid @enderror" id="department_name" name="department_name" value="{{ old('department_name') }}" required>
@@ -30,10 +36,10 @@
                 </div>
             @enderror
         </div>
-
+    
         <button type="submit" class="btn btn-primary">Lưu</button>
         <a href="{{ route('admin.department.index') }}" class="btn btn-secondary">Quay lại</a>
-    </form>
+    </form>    
 </div>
 @endsection
 

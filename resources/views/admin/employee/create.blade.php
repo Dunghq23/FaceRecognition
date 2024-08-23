@@ -49,7 +49,7 @@
 
         <div class="row g-0">
             <h4 class="dashboard-title rounded-3 h4 fw-bold text-white">
-                Thêm khách hàng
+                Thêm nhân viên
             </h4>
         </div>
 
@@ -84,7 +84,7 @@
                                     Tải ảnh lên
                                 </label>
                                 <input type="file" class="d-none" id="profile_picture" name="profile_picture"
-                                    accept="image/*" onchange="previewImage(event)">
+                                accept="image/jpeg, image/png, image/jpg, image/gif, image/svg+xml" onchange="previewImage(event)">
                             </div>
                         </div>
                         <div class="col-md-9">

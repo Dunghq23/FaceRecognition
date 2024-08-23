@@ -24,12 +24,43 @@ class DepartmentController extends Controller
     // Lưu phòng ban mới vào cơ sở dữ liệu
     public function store(Request $request)
     {
-        $request->validate([
-            'department_name' => 'required|string|max:255',
-        ]);
+        // $request->validate([
+        //     'department_name' => 'required|string|max:255',
+        // ]);
 
-        Department::create($request->all());
-        return redirect()->route('admin.department.index')->with('success', 'Phòng ban đã được thêm thành công.');
+        // Department::create($request->all());
+        // return redirect()->route('admin.department.index')->with('success', 'Phòng ban đã được thêm thành công.');
+
+        try {
+            // Validate the request
+            $request->validate([
+                'department_name' => 'required|string|regex:/^[\pL\s]+$/u|max:255',
+            ]);
+    
+            // Create the department
+            Department::create($request->all());
+    
+            // Redirect with success message
+            return redirect()->route('admin.department.index')->with('success', 'Phòng ban đã được thêm thành công.');
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // Handle validation errors
+            return redirect()->back()->withErrors($e->validator->errors())->withInput();
+        } catch (\Illuminate\Database\QueryException $e) {
+            // Handle unique constraint violations
+            $errorCode = $e->getCode();
+            $errorMessage = $e->getMessage();
+    
+            if ($errorCode == '23000') {
+                return redirect()->back()->with('error', 'Tên phòng ban đã tồn tại. Vui lòng chọn tên khác. (Mã lỗi: ' . $errorCode . ')')->withInput();
+            }
+    
+            // Handle other database errors
+            return redirect()->back()->with('error', 'Đã xảy ra lỗi với cơ sở dữ liệu: ' . $errorMessage . ' (Mã lỗi: ' . $errorCode . ')')->withInput();
+        } catch (\Exception $e) {
+            // Handle other types of exceptions
+            $errorMessage = $e->getMessage();
+            return redirect()->back()->with('error', 'Đã xảy ra lỗi không mong muốn: ' . $errorMessage . ' (Mã lỗi: ' . $e->getCode() . ')')->withInput();
+        }
     }
 
     // Hiển thị form chỉnh sửa phòng ban
