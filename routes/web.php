@@ -31,7 +31,7 @@ Route::post('/delete-image', [TrainController::class, 'deleteImage'])->name('del
 
 
 // checkin checkout timekeeping
-Route::get('/timekeeping', [TimekeepingController::class, 'index'])->name('timekeeping.index')->middleware('check.ip');
+Route::get('/timekeeping', [TimekeepingController::class, 'index'])->name('timekeeping.index');
 Route::post('/timekeeping', [TimekeepingController::class, 'timekeeping']);
 
 // statistics
@@ -93,6 +93,4 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::post('/getEmployeesByDepartment', [EmployeeController::class, 'getEmployeesByDepartmentAjax']);
 
     Route::get('/employees-by-department/{id}', [EmployeeController::class, 'getEmployeesByDepartment']);
-
-
 });
