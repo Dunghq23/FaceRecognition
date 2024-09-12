@@ -13,6 +13,13 @@ Route::get('/', function () {
     return view('home');
 })->name('home');
 
+// Đăng nhập
+Route::get('/login', function () {
+    return view('auth/login');
+})->name('login');
+Route::post('/check-login', [AuthController::class, 'checkLogin'])->name('checkLogin');;
+
+
 // Huấn luyện khuôn mặt
 Route::post('/photo-train', [TrainController::class, 'TrainAllFace']);
 Route::get('/train-face', [TrainController::class, 'index'])->name('trainface.index');
