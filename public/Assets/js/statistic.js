@@ -1,26 +1,29 @@
-$(document).ready(function() {
-    $('#timeStart').timepicker({
-        uiLibrary: 'bootstrap5'
+$(document).ready(function () {
+    $("#timeStart").timepicker({
+        uiLibrary: "bootstrap5",
     });
-    $('#timeEnd').timepicker({
-        uiLibrary: 'bootstrap5'
+    $("#timeEnd").timepicker({
+        uiLibrary: "bootstrap5",
     });
-    $('#datePicker').datepicker({
-        uiLibrary: 'bootstrap5',
-        format: 'dd/mm/yyyy'
+    $("#datePicker").datepicker({
+        uiLibrary: "bootstrap5",
+        format: "dd/mm/yyyy",
     });
 
-    // set current 
+    // set current
     function SetCurrentDate() {
         let today = new Date();
 
         // Format the date as MM/DD/YYYY
-        let formattedDate = today.getDate().toString().padStart(2, '0') + '/' +
-            (today.getMonth() + 1).toString().padStart(2, '0') + '/' +
+        let formattedDate =
+            today.getDate().toString().padStart(2, "0") +
+            "/" +
+            (today.getMonth() + 1).toString().padStart(2, "0") +
+            "/" +
             today.getFullYear();
 
         // Set the value of the input field
-        $('#datePicker').val(formattedDate);
+        $("#datePicker").val(formattedDate);
     }
 
     SetCurrentDate();
@@ -36,60 +39,80 @@ $(document).ready(function() {
             didOpen: (toast) => {
                 toast.onmouseenter = Swal.stopTimer;
                 toast.onmouseleave = Swal.resumeTimer;
-            }
+            },
         });
         Toast.fire({
             icon: status,
-            title: message
+            title: message,
         });
     }
 
     // call ajax
     function Statistics() {
-        $('#cover-spin').show(0);
-        let timeStart = $('#timeStart').val();
-        let timeEnd = $('#timeEnd').val();
-        let datePicker = $('#datePicker').val();
+        $("#cover-spin").show(0);
+        let timeStart = $("#timeStart").val();
+        let timeEnd = $("#timeEnd").val();
+        let datePicker = $("#datePicker").val();
         $.ajax({
-            url: '/statistics',
-            method: 'POST',
+            url: "/statistics",
+            method: "POST",
             headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
             },
             data: {
                 timeStart: timeStart,
                 timeEnd: timeEnd,
                 datePicker: datePicker,
             },
-            success: function(response) {
-                // console.log(response['employees']);
-
+            success: function (response) {
                 let today = new Date();
-                let formattedDate = (today.getMonth() + 1).toString().padStart(2, '0') + '/' +
+                let formattedDate =
+                    (today.getMonth() + 1).toString().padStart(2, "0") +
+                    "/" +
                     today.getFullYear();
 
-                let employees = response['employees'];
-                let tableBody = $('#employeesTableBody');
+                let employees = response["employees"];
+                let tableBody = $("#employeesTableBody");
                 tableBody.empty();
                 let i = 1;
-                employees.forEach(employee => {
-                    let earlyMinutes = employee['early'];
-                    let latelyMinutes = employee['lately'];
+                employees.forEach((employee) => {
+                    let earlyMinutes = employee["early"];
+                    let latelyMinutes = employee["lately"];
 
-                    let cellEarly = earlyMinutes != null ? `<td class="text-danger">${employee['check_out'] + ` (Sớm ${earlyMinutes} phút)`}</td>` : `<td>${employee['check_out']}</td>`;
-                    let cellLately = latelyMinutes != null ? `<td class="text-danger">${employee['check_in'] + ` (Muộn ${latelyMinutes} phút)`}</td>` : `<td>${employee['check_in']}</td>`;
+                    let cellEarly =
+                        earlyMinutes != null
+                            ? `<td class="text-danger">${
+                                  employee["check_out"] +
+                                  ` (Sớm ${earlyMinutes} phút)`
+                              }</td>`
+                            : `<td>${employee["check_out"]}</td>`;
+                    let cellLately =
+                        latelyMinutes != null
+                            ? `<td class="text-danger">${
+                                  employee["check_in"] +
+                                  ` (Muộn ${latelyMinutes} phút)`
+                              }</td>`
+                            : `<td>${employee["check_in"]}</td>`;
 
                     let row = `<tr>
                                     <td>${i++}</td>
-                                    <td>${employee['employee_name']}</td>
-                                    <td>${employee['department']['department_name']}</td>
+                                    <td>${employee["employee_name"]}</td>
+                                    <td>${
+                                        employee["department"][
+                                            "department_name"
+                                        ]
+                                    }</td>
                                     ${cellLately}
                                     ${cellEarly}
                                     <td>
-                                        <button type="button" data-bs-toggle="modal" data-employee-id='${employee['employee_id']}' class="btn btn-outline-primary btn-detail">
+                                        <button type="button" data-bs-toggle="modal" data-employee-id='${
+                                            employee["employee_id"]
+                                        }' class="btn btn-outline-primary btn-detail">
                                             <i class="fa fa-eye"></i>
                                         </button>
-                                        <div class="modal fade" id="detail${employee['employee_id']}" tabindex="-1" aria-hidden="true">
+                                        <div class="modal fade" id="detail${
+                                            employee["employee_id"]
+                                        }" tabindex="-1" aria-hidden="true">
                                             <div class="modal-dialog modal-fullscreen">
                                                 <div class="modal-content">
                                                     <div class="modal-header d-flex justify-content-center align-items-center">
@@ -98,6 +121,11 @@ $(document).ready(function() {
                                                     <div class="modal-body">
                                                     </div>
                                                     <div class="modal-footer">
+                                                        <button type="button" class="btn btn-success btnExport" data-value="${
+                                                            employee[
+                                                                "employee_id"
+                                                            ]
+                                                        }">Xuất excel</button>
                                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
                                                     </div>
                                                 </div>
@@ -107,8 +135,8 @@ $(document).ready(function() {
                                     </tr>`;
                     tableBody.append(row);
 
-                    let myModal = $('#detail'+employee['employee_id']);
-                    let modalBody = $(myModal).find('.modal-body');
+                    let myModal = $("#detail" + employee["employee_id"]);
+                    let modalBody = $(myModal).find(".modal-body");
                     modalBody.empty();
 
                     let html = `<div class="row">
@@ -116,18 +144,18 @@ $(document).ready(function() {
                                         <div class="card-header bg-transparent">
                                             <div class="row">
                                                 <div class="col-md-6">
-                                                    <div class="mb-2 mt-2 text-primary fw-semibold text-start">Nhân viên: <input type="text" class="employee border-0" value="${employee['employee_name']}" readonly></div>
-                                                    <div class="mb-2 text-primary fw-semibold text-start">Phòng ban: <input type="text" class="department border-0" value="${employee['department']['department_name']}" readonly></div>
+                                                    <div class="mb-2 mt-2 text-primary fw-semibold text-start">Nhân viên: <input type="text" id="employeeName${employee["employee_id"]}"class="employee border-0" value="${employee["employee_name"]}" readonly></div>
+                                                    <div class="mb-2 text-primary fw-semibold text-start">Phòng ban: <input type="text" id="department${employee["employee_id"]}"class="department border-0" value="${employee["department"]["department_name"]}" readonly></div>
                                                 </div>
                                                 <div class="col-md-6 d-flex align-items-center justify-content-end">
                                                     <div class="w-50">
-                                                        <input class="form-control border border-dark-subtle align-middle p-2 dateDetail" type="month" id="dateView${employee['employee_id']}" data-employee-id='${employee['employee_id']}' min="2024-01" value="2024-08" placeholder="Tháng làm việc" />
+                                                        <input class="form-control border border-dark-subtle align-middle p-2 dateDetail" type="month" id="dateView${employee["employee_id"]}" data-employee-id='${employee["employee_id"]}' min="2024-01" value="2024-08" placeholder="Tháng làm việc" />
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="card-body">
-                                            <table class="table table-bordered">
+                                            <table class="table table-bordered" id="tableExport${employee["employee_id"]}">
                                                 <thead class="thead-dark">
                                                     <tr class="text-center">
                                                         <th scope="col" class="bg-primary text-white">Ngày</th>
@@ -139,30 +167,30 @@ $(document).ready(function() {
                                                         <th scope="col" class="bg-primary text-white">Tổng giờ</th>
                                                     </tr>
                                                 </thead>
-                                                <tbody class="text-center align-middle" id="tbbody_detail${employee['employee_id']}"></tbody>
+                                                <tbody class="text-center align-middle" id="tbbody_detail${employee["employee_id"]}"></tbody>
                                             </table>
                                         </div>
                                     </div>
                                 </div>`;
-                            
+
                     modalBody.append(html);
                 });
-                $('#cover-spin').hide(0);                   
+                $("#cover-spin").hide(0);
             },
-            error: function(xhr, status, error) {
+            error: function (xhr, status, error) {
                 ShowToast("Đã có lỗi xảy ra khi thực hiện thống kê!", "error");
                 // console.error('Lỗi:', error);
-            }
+            },
         });
     }
 
     function ShowDetailStatistic(employee_id, timeStart, timeEnd, dateView) {
-        $('#cover-spin').show(0);
+        $("#cover-spin").show(0);
         $.ajax({
-            url: '/statisticsByEmployee',
-            method: 'POST',
+            url: "/statisticsByEmployee",
+            method: "POST",
             headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
             },
             data: {
                 employee_id: employee_id,
@@ -170,59 +198,60 @@ $(document).ready(function() {
                 time_end: timeEnd,
                 dateView: dateView,
             },
-            success: function(response) {
-                // console.log(response['data']);
-                let employee = response['data'];
+            success: function (response) {
+                let employee = response["data"];
                 renderHtmlModal(employee);
-                $('#cover-spin').hide(0);
+                $("#cover-spin").hide(0);
             },
-            error: function(xhr, status, error) {
-                ShowToast("Đã có lỗi xảy ra khi xem chi tiết thống kê!", "error");
-            }
+            error: function (xhr, status, error) {
+                ShowToast(
+                    "Đã có lỗi xảy ra khi xem chi tiết thống kê!",
+                    "error"
+                );
+            },
         });
-    } 
+    }
 
-    function renderHtmlModal(employee)
-    {
-        let myModal = $('#detail'+employee['employee_id']);
+    function renderHtmlModal(employee) {
+        let myModal = $("#detail" + employee["employee_id"]);
 
-        let tbbody = $('#tbbody_detail' + employee['employee_id']);
+        let tbbody = $("#tbbody_detail" + employee["employee_id"]);
         tbbody.empty();
-        employee['timekeepings'].forEach(item => {
+        employee["timekeepings"].forEach((item) => {
             let row = `<tr>
-                        <td>${item['day']}</td>
-                        <td>${item['check_in']}</td>
-                        <td>${item['check_out']}</td>
-                        <td>${item['lately']}</td>
-                        <td>${item['early']}</td>
-                        <td>${item['labour']}</td>
-                        <td>${item['totalHours']}</td>
+                        <td>${item["day"]}</td>
+                        <td>${item["check_in"]}</td>
+                        <td>${item["check_out"]}</td>
+                        <td>${item["lately"]}</td>
+                        <td>${item["early"]}</td>
+                        <td>${item["labour"]}</td>
+                        <td>${item["totalHours"]}</td>
                     </tr>`;
             tbbody.append(row);
         });
 
-        myModal.modal('show');
+        myModal.modal("show");
     }
 
     // call func
-    $('#btn-statistics').on('click', function() {
+    $("#btn-statistics").on("click", function () {
         Statistics();
-    })
+    });
 
-    $('#btn-statistics').trigger('click');
+    $("#btn-statistics").trigger("click");
 
-    $(document).on('click', '.btn-detail', function() {
-        let employee_id = $(this).data('employee-id');
-        let timeStart = $('#timeStart').val();
-        let timeEnd = $('#timeEnd').val();
-        let dateView = $('#dateView'+employee_id).val();
+    $(document).on("click", ".btn-detail", function () {
+        let employee_id = $(this).data("employee-id");
+        let timeStart = $("#timeStart").val();
+        let timeEnd = $("#timeEnd").val();
+        let dateView = $("#dateView" + employee_id).val();
         ShowDetailStatistic(employee_id, timeStart, timeEnd, dateView);
     });
 
-    $(document).on('change', '.dateDetail', function() {
-        let employee_id = $(this).data('employee-id');
-        let timeStart = $('#timeStart').val();
-        let timeEnd = $('#timeEnd').val();
+    $(document).on("change", ".dateDetail", function () {
+        let employee_id = $(this).data("employee-id");
+        let timeStart = $("#timeStart").val();
+        let timeEnd = $("#timeEnd").val();
         let dateView = $(this).val();
         ShowDetailStatistic(employee_id, timeStart, timeEnd, dateView);
     });

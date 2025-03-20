@@ -13,6 +13,13 @@ Route::get('/', function () {
     return view('home');
 })->name('home');
 
+// Đăng nhập
+Route::get('/login', function () {
+    return view('auth/login');
+})->name('login');
+Route::post('/check-login', [AuthController::class, 'checkLogin'])->name('checkLogin');;
+
+
 // Huấn luyện khuôn mặt
 Route::post('/photo-train', [TrainController::class, 'TrainAllFace']);
 Route::get('/train-face', [TrainController::class, 'index'])->name('trainface.index');
@@ -31,7 +38,7 @@ Route::post('/delete-image', [TrainController::class, 'deleteImage'])->name('del
 
 
 // checkin checkout timekeeping
-Route::get('/timekeeping', [TimekeepingController::class, 'index'])->name('timekeeping.index')->middleware('check.ip');
+Route::get('/timekeeping', [TimekeepingController::class, 'index'])->name('timekeeping.index');
 Route::post('/timekeeping', [TimekeepingController::class, 'timekeeping']);
 
 // statistics
@@ -93,6 +100,4 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::post('/getEmployeesByDepartment', [EmployeeController::class, 'getEmployeesByDepartmentAjax']);
 
     Route::get('/employees-by-department/{id}', [EmployeeController::class, 'getEmployeesByDepartment']);
-
-
 });
