@@ -4,7 +4,7 @@
             <img src="{{ asset('general/images/logo.jpg') }}" alt="" height="55" class="object-fit-cover">
         </a>
     </div>
-    {{-- <div class="d-flex align-items-center justify-content-center">
+    <div class="d-flex align-items-center justify-content-center">
         <div class="notification-list">
             <a class="nav-user py-3 px-2 d-flex gap-2" href="#">
                 <div class="account-avatar">
@@ -12,17 +12,20 @@
                 </div>
                 <div class="d-flex flex-column ms-1 text-start">
                     <span class="account-name">
-                        {{ session('name') }}
+                        {{ Auth::user()->employee->employee_name }}
                         <i class="fa-solid fa-angle-down"></i>
                     </span>
-                    <span class="account-username">{{ session('username') }}</span>
+                    <span class="account-username">{{ Auth::user()->username }}</span>
                 </div>
             </a>
             <div class="dropdown-menu">
-                <a class="dropdown-item" href="">
-                    <span>Đăng xuất</span>
-                </a>
+                <form action="{{ route('auth.logout') }}" method="POST">
+                    @csrf
+                    <button type="submit" class="dropdown-item">
+                        Đăng xuất
+                    </button>
+                </form>
             </div>
         </div>
-    </div> --}}
+    </div>
 </div>

@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Illuminate\Auth\Middleware\Authenticate as Middleware;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 
 class Authenticate extends Middleware
 {
@@ -12,6 +13,12 @@ class Authenticate extends Middleware
      */
     protected function redirectTo(Request $request): ?string
     {
-        return $request->expectsJson() ? null : route('login');
+        if (!$request->expectsJson()) {
+            // Đặt session thông báo trước khi redirect
+            Session::flash('warning', 'Bạn cần đăng nhập để tiếp tục!');
+    
+            return route('auth.login');
+        }
+        return null;
     }
 }

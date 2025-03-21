@@ -15,7 +15,7 @@ class TrainController extends Controller
     public function index()
     {
         $departments = Department::all();
-        return view('auth/trainface', compact('departments'));
+        return view('recognize.trainface', compact('departments'));
     }
 
     public function savePhoto(Request $request)
@@ -181,7 +181,7 @@ class TrainController extends Controller
         $departments = Department::all();
 
         // Trả về view và truyền dữ liệu vào view
-        return view('auth.unknownList', compact('unknownRecognitions', 'departments'));
+        return view('recognize.unknown-list', compact('unknownRecognitions', 'departments'));
     }
 
     public function deleteImages()

@@ -41,7 +41,7 @@
             <ol class="breadcrumb mb-0">
                 <li class="breadcrumb-item"><a class="text-decoration-none" href="{{ route('home') }}">Trang chủ</a></li>
                 <li class="breadcrumb-item">
-                    <a class="text-decoration-none" href="{{ route('admin.employee.index') }}">Quản lý nhân viên</a>
+                    <a class="text-decoration-none" href="{{ route('management.employee.index') }}">Quản lý nhân viên</a>
                 </li>
                 <li class="breadcrumb-item active fw-medium" aria-current="page">Sửa</li>
             </ol>
@@ -64,7 +64,7 @@
                     </div>
                 @endif
 
-                <form action="{{ route('admin.employee.update', $employee->employee_id) }}" method="POST"
+                <form action="{{ route('management.employee.update', $employee->employee_id) }}" method="POST"
                     enctype="multipart/form-data">
                     @csrf
                     @method('PATCH')
@@ -220,7 +220,7 @@
                     <div class="row mt-3">
                         <div class="col-md-12 d-flex justify-content-end">
                             <button type="button" class="btn btn-secondary me-2">
-                                <a href="{{ route('admin.employee.index') }}"
+                                <a href="{{ route('management.employee.index') }}"
                                     class="text-white text-decoration-none">Quay
                                     lại</a>
                             </button>

@@ -24,7 +24,7 @@
     @endif
 
     <!-- Form thêm phòng ban -->
-    <form action="{{ route('admin.department.store') }}" method="POST">
+    <form action="{{ route('management.department.store') }}" method="POST">
         @csrf
     
         <div class="mb-3">
@@ -38,7 +38,7 @@
         </div>
     
         <button type="submit" class="btn btn-primary">Lưu</button>
-        <a href="{{ route('admin.department.index') }}" class="btn btn-secondary">Quay lại</a>
+        <a href="{{ route('management.department.index') }}" class="btn btn-secondary">Quay lại</a>
     </form>    
 </div>
 @endsection

@@ -1,245 +1,204 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('layouts.master')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Document</title>
-    <link rel="icon" href="{{ asset('Assets/images/favicon.png') }}" type="image/x-icon" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <link
-        href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,500&display=swap"
-        rel="stylesheet">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <link rel="stylesheet" href="{{ asset('Assets/css/login.css') }}">
+@section('title', 'Đăng nhập')
 
+@push('css')
     <style>
+        body {
+            background-color: #fafafa;
+        }
+
         #video {
             transform: scaleX(-1);
-            /* Lật theo trục Y */
+        }
+
+        .login-card {
+            background: white;
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.08);
+            width: 100%;
+            max-width: 450px;
+            margin: 0 auto;
+        }
+
+        .login-header {
+            background: white;
+            border-bottom: 1px solid #f1f1f1;
+            border-radius: 15px 15px 0 0;
+        }
+
+        .btn-face-login {
+            background-color: #011e41;
+            border: none;
+            color: white;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-face-login:hover {
+            background-color: #022b5c;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(1, 30, 65, 0.3);
+        }
+
+        .btn-face-login:active {
+            background-color: #011733;
+            transform: translateY(0);
+            box-shadow: 0 2px 8px rgba(1, 30, 65, 0.2);
+        }
+
+        .btn-face-login::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(120deg,
+                    transparent,
+                    rgba(255, 255, 255, 0.1),
+                    transparent);
+            transition: 0.5s;
+        }
+
+        .btn-face-login:hover::before {
+            left: 100%;
+        }
+
+        .form-control {
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            border: 1px solid #e0e0e0;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: #var(--primary);
+            box-shadow: 0 0 0 0.2rem rgba(120, 234, 120, 0.3);
+        }
+
+        .form-label {
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+            color: #666;
+        }
+
+        .login-title {
+            color: #var(--primary);
+            font-weight: 600;
+        }
+
+        .login-subtitle {
+            color: #666;
+            font-size: 1.05rem;
+        }
+
+        .modal-content {
+            border-radius: 15px;
+        }
+
+        .modal-header {
+            border-radius: 15px 15px 0 0;
+            background-color: #var(--primary);
+            color: white;
+        }
+
+        .modal-title {
+            color: white;
+        }
+
+        .btn-close {
+            filter: brightness(0) invert(1);
         }
     </style>
-</head>
+@endpush
 
-<body>
-    <div class="container">
-        <div class="row d-flex align-items-center justify-content-center">
-            <div class="col-md-4">
-                <div class="card shadow rounded-1">
-                    <div class="card-header d-flex align-items-center justify-content-center py-3">
-                        <a href="{{ route('home') }}" class="text-center">
-                            <img src="{{ asset('images/nobg.png') }}" alt="" height="64"
-                                class="object-fit-cover">
-                        </a>
-                    </div>
-                    <div class="card-body p-4">
-                        <div class="text-center">
-                            <h4 class="text-dark-emphasis text-center pb-0 fs-5 fw-bold">Đăng nhập</h4>
-                            <p class="text-muted mb-4">Nhập tên đăng nhập và mật khẩu của bạn</p>
-                        </div>
-                        <form action="{{ route('checkLogin') }}" method="post">
-                            @csrf
-                            <div class="mb-3">
-                                <label class="form-label fw-medium text-secondary" for="floatingInput">Tên đăng
-                                    nhập</label>
-                                <input name="username" type="text"
-                                    class="form-control{{ $errors->has('username') ? ' is-invalid' : '' }}"
-                                    id="floatingInput" placeholder="Vui lòng nhập tên đăng nhập" tabindex="1">
-                                <span class="text-danger">
-                                    @if ($errors->has('username'))
-                                        {{ $errors->first('username') }}
-                                    @endif
-                                </span>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label fw-medium text-secondary"
-                                    for="floatingPassword">Password</label>
-                                <input name="password" type="password"
-                                    class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}"
-                                    id="floatingPassword" placeholder="Vui lòng nhập mật khẩu" tabindex="2">
-                                <span class="text-danger">
-                                    @if ($errors->has('password'))
-                                        {{ $errors->first('password') }}
-                                    @endif
-                                </span>
-                            </div>
-                            <div>
-                                <button type="submit" class="btn btn-primary rounded-1 w-100 my-2" tabindex="3">Đăng
-                                    nhập</button>
-                                <button type="button" class="btn btn-success rounded-1 w-100 my-2"
-                                    data-bs-toggle="modal" data-bs-target="#faceLogin">
-                                    Đăng nhập bằng khuôn mặt
-                                </button>
-                                <div class="modal fade" id="faceLogin" tabindex="-1" aria-labelledby="faceLoginLabel"
-                                    aria-hidden="true">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h1 class="modal-title fs-5" id="faceLoginLabel">Đăng nhập bằng khuôn
-                                                    mặt</h1>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                    aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <div id="Recognize" class="recognizeface border border-dark">
-                                                    <div class="wrapper">
-                                                        <video class="w-100" id="video" autoplay></video>
-                                                        <div id="loadingIndicator" class="d-none"
-                                                            style="text-align: center;">
-                                                            <img src="{{ asset('Assets/images/loading.gif') }}"
-                                                                alt="Loading..." />
-                                                        </div>
-                                                    </div>
-                                                    <canvas id="canvas" class="d-none"></canvas>
-                                                </div>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" id="btnLogin" class="btn btn-primary">Đăng
-                                                    nhập</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
+@section('hideSidebar')
+@endsection
+
+@section('hideHeader')
+@endsection
+
+@section('hideFooter')
+@endsection
+
+@section('content')
+    <div class="container login-container">
+        <div class="card login-card">
+            <div class="card-header login-header d-flex align-items-center justify-content-center py-4">
+                <img src="{{ asset('general/images/nobg.png') }}" alt="" height="70" class="object-fit-cover">
+            </div>
+            <div class="card-body p-4">
+                <div class="text-center mb-4">
+                    <h4 class="login-title mb-2">Chào mừng trở lại!</h4>
+                    <p class="login-subtitle mb-0">Vui lòng đăng nhập để tiếp tục</p>
                 </div>
+                <form action="{{ route('auth.checkLogin') }}" method="post">
+                    @csrf
+                    <div class="mb-4">
+                        <label class="form-label text-sm" for="floatingInput">Tên đăng nhập</label>
+                        <input name="username" type="username"
+                            class="form-control{{ $errors->has('username') ? ' is-invalid' : '' }}" id="floatingInput"
+                            placeholder="Nhập tên đăng nhập của bạn" tabindex="1"
+                            value="{{ old('username') }}">
+                        @if ($errors->has('username'))
+                            <div class="invalid-feedback">
+                                {{ $errors->first('username') }}
+                            </div>
+                        @endif
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label" for="floatingPassword">Mật khẩu</label>
+                        <input name="password" type="password"
+                            class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" id="floatingPassword"
+                            placeholder="Nhập mật khẩu của bạn" tabindex="2">
+                        @if ($errors->has('password'))
+                            <div class="invalid-feedback">
+                                {{ $errors->first('password') }}
+                            </div>
+                        @endif
+                    </div>
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary py-2 fw-medium" tabindex="3">
+                            <i class="fas fa-sign-in-alt me-2"></i>Đăng nhập
+                        </button>
+                        {{-- <button type="button" class="btn btn-face-login py-2 fw-medium" data-bs-toggle="modal"
+                            data-bs-target="#faceLogin">
+                            <i class="fas fa-camera me-2"></i>Đăng nhập bằng khuôn mặt
+                        </button> --}}
+                    </div>
+                </form>
             </div>
         </div>
     </div>
 
-    <script type="text/javascript">
-        $(document).ready(function() {
-            let stream = null;
-
-            async function startCamera() {
-                try {
-                    stream = await navigator.mediaDevices.getUserMedia({
-                        video: true
-                    });
-                    const video = $('#video')[0];
-                    video.srcObject = stream;
-                } catch (error) {
-                    console.error('Lỗi khi truy cập camera:', error);
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Không thể truy cập camera',
-                        text: 'Hãy kiểm tra quyền truy cập camera trên trình duyệt của bạn.',
-                    });
-                }
-            }
-
-            function stopCamera() {
-                if (stream) {
-                    stream.getTracks().forEach(track => track.stop());
-                    $('#video')[0].srcObject = null;
-                    stream = null;
-                }
-            }
-
-            $('#faceLogin').on('show.bs.modal', function() {
-                startCamera();
-                $('#Recognize').removeClass('d-none');
-            });
-
-            $('#faceLogin').on('hide.bs.modal', function() {
-                stopCamera();
-                $('#Recognize').addClass('d-none');
-            });
-
-            $('#btnLogin').on('click', function() {
-                takePhoto();
-            });
-
-            function takePhoto() {
-                const video = $('#video')[0];
-                const canvas = $('#canvas')[0];
-                const context = canvas.getContext('2d');
-
-                canvas.width = video.videoWidth;
-                canvas.height = video.videoHeight;
-
-                context.drawImage(video, 0, 0, canvas.width, canvas.height);
-                const imageBase64 = canvas.toDataURL('image/png');
-                $('#loadingIndicator').removeClass('d-none');
-
-                $.ajax({
-                    url: '/save-photo',
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-                        'Content-Type': 'application/json'
-                    },
-                    data: JSON.stringify({
-                        imageBase64
-                    }),
-                    success: function(response) {
-                        console.log('Ảnh đã được lưu:', response.filepath);
-                        recognizeFace(response.filepath);
-                    },
-                    error: function(xhr, status, error) {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Lỗi',
-                            text: 'Đã có lỗi xảy ra khi gửi ảnh tới máy chủ!',
-                        });
-                        console.error('Lỗi:', error);
-                    }
-                });
-            }
-
-            function recognizeFace(imagePath) {
-                $.ajax({
-                    url: '/recognize-face',
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-                        'Content-Type': 'application/json'
-                    },
-                    data: JSON.stringify({
-                        imagePath
-                    }),
-                    success: function(response) {
-                        let name = response.recognizedName;
-                        console.log('Tên người được nhận dạng:', name);
-
-                        if (name !== 'Unknown' && name !== 'Không có khuôn mặt được tìm thấy!' &&
-                            name != 'Phát hiện 2 khuôn mặt, vui lòng thử lại!') {
-                            Swal.fire({
-                                title: 'Nhận diện thành công',
-                                text: `Chào mừng ${name}!`,
-                                icon: 'success'
-                            });
-                        } else {
-                            Swal.fire({
-                                title: 'Cảnh báo!',
-                                text: 'Nhân viên này không tồn tại!',
-                                icon: 'warning'
-                            });
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Lỗi',
-                            text: 'Đã có lỗi xảy ra khi nhận diện ảnh!',
-                        });
-                        console.error('Lỗi:', error);
-                    },
-                    complete: function() {
-                        $('#loadingIndicator').addClass('d-none');
-                    }
-                });
-            }
-        });
-    </script>
-</body>
-
-</html>
+    <!-- Modal Face Login -->
+    <div class="modal fade" id="faceLogin" tabindex="-1" aria-labelledby="faceLoginLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="faceLoginLabel">
+                        <i class="fas fa-camera me-2"></i>Đăng nhập bằng khuôn mặt
+                    </h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-3">
+                    <div id="Recognize" class="recognizeface">
+                        <div class="wrapper">
+                            <video class="w-100 rounded" id="video" autoplay></video>
+                        </div>
+                        <canvas id="canvas" class="d-none"></canvas>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="btnLogin" class="btn btn-primary px-4">
+                        <i class="fas fa-sign-in-alt me-2"></i>Đăng nhập
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+@endsection

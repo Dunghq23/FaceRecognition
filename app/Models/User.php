@@ -11,20 +11,26 @@ class User extends Model implements Authenticatable
 {
     use HasFactory, AuthenticableTrait;
 
-    protected $table = 'dbo.User'; // Tên bảng trong cơ sở dữ liệu
+    protected $table = 'accounts';
 
-    protected $primaryKey = 'Id_User'; // Khóa chính của bảng
+    protected $primaryKey = 'account_id';
 
     protected $fillable = [
-        'Name',
-        'UserName',
-        'Password',
+        'fk_employee_id',
+        'username',
+        'password'
     ];
 
     protected $hidden = [
-        'Password',
-        'remember_token',
+        'password'
     ];
 
-    // Không sử dụng mutator để băm mật khẩu
+    protected $casts = [
+        'password' => 'hashed'
+    ];
+
+    public function employee()
+    {
+        return $this->belongsTo(Employee::class, 'fk_employee_id', 'employee_id');
+    }
 }

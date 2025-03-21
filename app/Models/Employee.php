@@ -52,4 +52,9 @@ class Employee extends Model
     {
         return $this->hasMany(Timekeeping::class, 'fk_employee_id');
     }
+
+    public function account()
+    {
+        return $this->hasOne(User::class, 'fk_employee_id', 'employee_id');
+    }
 }

@@ -41,7 +41,7 @@
             <ol class="breadcrumb mb-0">
                 <li class="breadcrumb-item"><a class="text-decoration-none" href="{{ route('home') }}">Trang chủ</a></li>
                 <li class="breadcrumb-item">
-                    <a class="text-decoration-none" href="{{ route('admin.employee.index') }}">Quản lý nhân viên</a>
+                    <a class="text-decoration-none" href="{{ route('management.employee.index') }}">Quản lý nhân viên</a>
                 </li>
                 <li class="breadcrumb-item active fw-medium" aria-current="page">Thông tin nhân viên</li>
             </ol>

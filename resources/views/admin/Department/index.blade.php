@@ -23,7 +23,7 @@
 
         <div class="card mt-3">
             <div class="card-header">
-                <a href="{{ route('admin.department.create') }}" class="btn btn-primary my-3">Thêm Phòng Ban</a>
+                <a href="{{ route('management.department.create') }}" class="btn btn-primary my-3">Thêm Phòng Ban</a>
             </div>
             <div class="card-body">
                 <!-- Hiển thị thông báo lỗi nếu có -->
@@ -54,7 +54,7 @@
                                 <td>{{ $department->department_id }}</td>
                                 <td>{{ $department->department_name }}</td>
                                 <td>
-                                    <a href="{{ route('admin.department.edit', $department->department_id) }}"
+                                    <a href="{{ route('management.department.edit', $department->department_id) }}"
                                         class="btn btn-outline-warning btn-sm"><svg xmlns="http://www.w3.org/2000/svg"
                                             width="16" height="16" fill="currentColor" class="bi bi-pen"
                                             viewBox="0 0 16 16">
@@ -63,7 +63,7 @@
                                         </svg>
                                     </a>
 
-                                    <form action="{{ route('admin.department.destroy', $department->department_id) }}"
+                                    <form action="{{ route('management.department.destroy', $department->department_id) }}"
                                         method="POST" style="display:inline;">
                                         @csrf
                                         @method('DELETE')
@@ -112,14 +112,12 @@
 @endsection
 
 @push('javascript')
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script>
         $(document).ready(function() {
             $('#deleteModal').on('show.bs.modal', function(event) {
                 var button = $(event.relatedTarget); // Button that triggered the modal
                 var departmentId = button.data('id'); // Extract info from data-* attributes
-                var actionUrl = '{{ url('admin/department') }}/' + departmentId; // Set form action URL
+                var actionUrl = '{{ url('management/department') }}/' + departmentId; // Set form action URL
 
                 var form = $(this).find('#deleteForm');
                 form.attr('action', actionUrl);

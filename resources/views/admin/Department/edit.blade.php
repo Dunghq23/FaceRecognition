@@ -18,7 +18,7 @@
     @endif
 
     <!-- Form chỉnh sửa phòng ban -->
-    <form action="{{ route('admin.department.update', $department->department_id) }}" method="POST">
+    <form action="{{ route('management.department.update', $department->department_id) }}" method="POST">
         @csrf
         @method('PUT')
 
@@ -33,7 +33,7 @@
         </div>
 
         <button type="submit" class="btn btn-primary">Cập nhật</button>
-        <a href="{{ route('admin.department.index') }}" class="btn btn-secondary">Quay lại</a>
+        <a href="{{ route('management.department.index') }}" class="btn btn-secondary">Quay lại</a>
     </form>
 
 </div>

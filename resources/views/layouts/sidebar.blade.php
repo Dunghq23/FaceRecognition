@@ -42,12 +42,12 @@
             <div class="sidebar-group">
                 <h6 class="sidebar-title">Quản lý Hồ sơ nhân viên</h6>
                 <div class="sidebar-content">
-                    <a class="sidebar-item{{ Str::startsWith(request()->url(), url('/admin/department')) ? ' active' : '' }}"
-                        href="{{route('admin.department.index')}}">
+                    <a class="sidebar-item{{ Str::startsWith(request()->url(), url('/management/department')) ? ' active' : '' }}"
+                        href="{{route('management.department.index')}}">
                         <span>Phòng ban</span>
                     </a>
-                    <a class="sidebar-item{{ Str::startsWith(request()->url(), url('/admin/employee')) ? ' active' : '' }}"
-                        href="{{route('admin.employee.index')}}">
+                    <a class="sidebar-item{{ Str::startsWith(request()->url(), url('/management/employee')) ? ' active' : '' }}"
+                        href="{{route('management.employee.index')}}">
                         <span>Nhân viên</span>
                     </a>
                     <a class="sidebar-item" href="#">

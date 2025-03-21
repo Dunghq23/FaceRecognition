@@ -21,7 +21,7 @@ $(document).ready(function () {
     // get data
     function GetEmployeesByDepartment(department_id) {
         $.ajax({
-            url: 'admin/getEmployeesByDepartment',
+            url: 'management/getEmployeesByDepartment',
             method: 'POST',
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),

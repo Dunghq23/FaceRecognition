@@ -75,7 +75,7 @@
         <div class="card mt-3">
             <div class="card-header">
                 <h4>Danh sách nhân viên</h4>
-                <a href="{{ route('admin.employee.create') }}" class="btn btn-primary">
+                <a href="{{ route('management.employee.create') }}" class="btn btn-primary">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                         class="bi bi-person-add" viewBox="0 0 16 16">
                         <path
@@ -137,7 +137,7 @@
 
                 // Gửi AJAX request để lấy danh sách nhân viên và phòng ban
                 $.ajax({
-                    url: '/admin/employees-by-department/' + selectedDepartmentId,
+                    url: '/management/employees-by-department/' + selectedDepartmentId,
                     type: 'GET',
                     success: function(response) {
                         console.log(response); // Kiểm tra cấu trúc của data

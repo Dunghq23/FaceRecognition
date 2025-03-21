@@ -75,7 +75,7 @@
         <div class="card mt-3">
             <div class="card-header">
                 <h4>Danh sách nhân viên</h4>
-                <a href="{{ route('admin.employee.create') }}" class="btn btn-primary">
+                <a href="{{ route('management.employee.create') }}" class="btn btn-primary">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                         class="bi bi-person-add" viewBox="0 0 16 16">
                         <path
@@ -150,16 +150,13 @@
 @endsection
 
 @push('javascript')
-    {{-- <script script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> --}}
-    {{-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> --}}
-    {{-- <script src="{{ asset('general/js/libs/bootstrap.bundle.min.js') }}"></script> --}}
     <script>
         $(document).ready(function() {
             $('#department').change(function() {
                 var selectedDepartmentId = $(this).val();
                 $('#department-cards-container').empty();
                 $.ajax({
-                    url: '/admin/employees-by-department/' + selectedDepartmentId,
+                    url: '/management/employees-by-department/' + selectedDepartmentId,
                     method: 'GET',
                     success: function(response) {
                         // Cập nhật nội dung bảng với dữ liệu nhận được
@@ -189,7 +186,7 @@
             $('#deleteModal').on('show.bs.modal', function(event) {
                 var button = $(event.relatedTarget); // Button that triggered the modal
                 var employeeId = button.data('id'); // Extract info from data-* attributes
-                var actionUrl = '{{ url('admin/employee') }}/' + employeeId; // Set form action URL
+                var actionUrl = '{{ url('management/employee') }}/' + employeeId; // Set form action URL
 
                 var form = $(this).find('#deleteForm');
                 form.attr('action', actionUrl);

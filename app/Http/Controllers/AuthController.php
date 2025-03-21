@@ -4,50 +4,58 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 
 class AuthController extends Controller
 {
-    // public function savePhoto(Request $request)
-    // {
-    //     if ($request->ajax()) {
-    //         if ($request->has('imageBase64')) {
-    //             $imageData = $request->input('imageBase64');
+    public function login()
+    {
+        // User::create([
+        //     'fk_employee_id' => 5,
+        //     'username' => 'admin',
+        //     'password' => Hash::make('123456')
+        // ]);
+        return view('auth.login');
+    }
 
-    //             // Chuẩn bị dữ liệu ảnh để giải mã
-    //             $imageData = str_replace('data:image/png;base64,', '', $imageData); // Loại bỏ phần header của base64
-    //             $imageData = str_replace(' ', '+', $imageData); // Thay thế các khoảng trắng
+    public function checkLogin(Request $request)
+    {
+        $request->validate([
+            'username' => 'required',
+            'password' => 'required|min:6'
+        ], [
+            'username.required' => 'Vui lòng nhập tài khoản!',
+            // 'username.min' => 'Tên tài khoản phải có ít nhất 6 ký tự!',
+            'password.required' => 'Vui lòng nhập mật khẩu!',
+            'password.min' => 'Mật khẩu phải có ít nhất 6 ký tự!'
+        ]);
 
-    //             // Giải mã dữ liệu base64 thành dữ liệu nhị phân của ảnh
-    //             $imageBinary = base64_decode($imageData);
+        $credentials = $request->only('username', 'password');
 
-    //             // Đường dẫn tới thư mục trong storage/app
-    //             $uploadPath = 'ImageRecognize/';
+        $userFound = User::where('username', $credentials['username'])->first();
+        if (!$userFound) {
+            return back()->with('error', 'Người dùng không tồn tại!')->withInput();
+        }
 
-    //             // Tạo thư mục nếu chưa tồn tại
-    //             if (!Storage::exists($uploadPath)) {
-    //                 // Storage::makeDirectory($uploadPath, 0777, true, true);
-    //                 Storage::makeDirectory($uploadPath);
-    //             }
+        if (Auth::attempt($credentials)) {
+            $request->session()->regenerate();
+            return redirect()->route('home')->with('success', 'Đăng nhập thành công!');
+        }
 
-    //             // Tạo tên file duy nhất
-    //             $filename = 'photo_' . date('Y-m-d-H-i-s') . '.png';
+        // fail
+        return back()->with('error', 'Mật khẩu không chính xác!')->withInput();
+    }
 
-    //             // Lưu ảnh vào thư mục trong storage
-    //             Storage::put($uploadPath . $filename, $imageBinary);
-
-    //             // Lấy đường dẫn tuyệt đối của file đã lưu
-    //             $filePath = Storage::path($uploadPath . $filename);
-
-    //             // Trả về đường dẫn tuyệt đối
-    //             return response()->json(['filepath' => realpath($filePath)]);
-    //         } else {
-    //             return response()->json(['error' => 'Không có dữ liệu ảnh được gửi lên.'], 400);
-    //         }
-    //     }
-    // }
-
+    public function logout(Request $request)
+    {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        return redirect()->route('auth.login')->with('success', 'Đăng xuất thành công!');
+    }
 
     public function savePhoto(Request $request)
     {

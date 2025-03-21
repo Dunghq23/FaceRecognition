@@ -41,7 +41,7 @@
             <ol class="breadcrumb mb-0">
                 <li class="breadcrumb-item"><a class="text-decoration-none" href="{{ route('home') }}">Trang chủ</a></li>
                 <li class="breadcrumb-item">
-                    <a class="text-decoration-none" href="{{ route('admin.employee.index') }}">Quản lý nhân viên</a>
+                    <a class="text-decoration-none" href="{{ route('management.employee.index') }}">Quản lý nhân viên</a>
                 </li>
                 <li class="breadcrumb-item active fw-medium" aria-current="page">Thêm</li>
             </ol>
@@ -64,7 +64,7 @@
                     </div>
                 @endif
 
-                <form action="{{ route('admin.employee.store') }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('management.employee.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="row">
                         <div class="col-md-3 ">
@@ -198,7 +198,7 @@
                     <div class="row mt-3">
                         <div class="col-md-12 d-flex justify-content-end">
                             <button type="button" class="btn btn-secondary me-2">
-                                <a href="{{ route('admin.employee.index') }}" class="text-white text-decoration-none">Quay
+                                <a href="{{ route('management.employee.index') }}" class="text-white text-decoration-none">Quay
                                     lại</a>
                             </button>
                             <button type="submit" class="btn btn-primary">Lưu</button>
