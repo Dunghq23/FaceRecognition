@@ -71,7 +71,7 @@
 
 @push('javascript')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-    <script src="{{ asset('Assets/js/statistic.js') }}"></script>
+    <script src="{{ asset('general/js/statistic.js') }}"></script>
     <script>
         $(document).ready(function() {
             $(document).on("click", ".btnExport", async function() {

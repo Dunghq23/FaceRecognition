@@ -1,39 +1,117 @@
 <div class="left-side-menu">
-    <nav class="sidebar-wrapped px-4 py-1">
+    <nav class="sidebar-wrapped">
         <div class="sidebar">
-            <div style="overflow: hidden" style="overflow: hidden" class="sidebar-group">
-                <a class="sidebar-item{{ request()->is('/') ? ' active' : '' }}" href="{{route('home')}}">
-                    <span>Trang chủ</span>
-                </a>
+            <div class="sidebar-group">
+                <div class="sidebar-content">
+                    <a class="sidebar-item{{ request()->is('/') ? ' active' : '' }}" href="{{route('home')}}">
+                        <span>Trang chủ</span>
+                    </a>
+                </div>
             </div>
-            <div style="overflow: hidden" class="sidebar-group">
-                <h6 class="sidebar-title">Dữ liệu khuôn mặt</h6>
-                <a class="sidebar-item{{ Str::startsWith(request()->url(), url('/train-face')) ? ' active' : '' }}"
-                    href="{{route('trainface.index')}}">
-                    <span>Thêm dữ liệu khuôn mặt</span>
-                </a>
-                <a class="sidebar-item{{ Str::startsWith(request()->url(), url('/recognition-unknown-list')) ? ' active' : '' }}"
-                    href="{{route('recognition.index')}}">
-                    Khuôn mặt chưa được nhận diện
-                </a>
+            
+            <div class="sidebar-group">
+                <h6 class="sidebar-title">Quản trị Hệ thống</h6>
+                <div class="sidebar-content">
+                    <a class="sidebar-item" href="#">
+                        <span>Quản lý người dùng</span>
+                    </a>
+                    <a class="sidebar-item" href="#">
+                        <span>Phân quyền người dùng</span>
+                    </a>
+                    <a class="sidebar-item" href="#">
+                        <span>Nhật ký thao tác hệ thống</span>
+                    </a>
+                </div>
             </div>
-            <div style="overflow: hidden" class="sidebar-group">
-                <h6 class="sidebar-title">Công việc</h6>
-                <a class="sidebar-item{{ Str::startsWith(request()->url(), url('/timekeeping')) ? ' active' : '' }}"
-                    href="{{route('timekeeping.index')}}"> Chấm công
-                </a>
-                <a class="sidebar-item{{ Str::startsWith(request()->url(), url('/statistic')) ? ' active' : '' }}"
-                    href="{{route('timekeeping.statistic')}}"> Thống kê
-                </a>
+            
+            <div class="sidebar-group">
+                <h6 class="sidebar-title">Quản lý Tuyển dụng</h6>
+                <div class="sidebar-content">
+                    <a class="sidebar-item" href="#">
+                        <span>Hồ sơ ứng viên</span>
+                    </a>
+                    <a class="sidebar-item" href="#">
+                        <span>Lịch phỏng vấn</span>
+                    </a>
+                    <a class="sidebar-item" href="#">
+                        <span>Thông báo phỏng vấn</span>
+                    </a>
+                </div>
             </div>
-            <div style="overflow: hidden" class="sidebar-group">
-                <h6 class="sidebar-title">Quản lý</h6>
-                <a class="sidebar-item{{ Str::startsWith(request()->url(), url('/admin/department')) ? ' active' : '' }}"
-                    href="{{route('admin.department.index')}}"> Phòng ban
-                </a>
-                <a class="sidebar-item{{ Str::startsWith(request()->url(), url('/admin/employee')) ? ' active' : '' }}"
-                    href="{{route('admin.employee.index')}}"> Nhân viên
-                </a>
+            
+            <div class="sidebar-group">
+                <h6 class="sidebar-title">Quản lý Hồ sơ nhân viên</h6>
+                <div class="sidebar-content">
+                    <a class="sidebar-item{{ Str::startsWith(request()->url(), url('/admin/department')) ? ' active' : '' }}"
+                        href="{{route('admin.department.index')}}">
+                        <span>Phòng ban</span>
+                    </a>
+                    <a class="sidebar-item{{ Str::startsWith(request()->url(), url('/admin/employee')) ? ' active' : '' }}"
+                        href="{{route('admin.employee.index')}}">
+                        <span>Nhân viên</span>
+                    </a>
+                    <a class="sidebar-item" href="#">
+                        <span>Hợp đồng lao động</span>
+                    </a>
+                    <a class="sidebar-item" href="#">
+                        <span>Hồ sơ, bằng cấp, chứng chỉ</span>
+                    </a>
+                    <a class="sidebar-item" href="#">
+                        <span>Quá trình công tác, khen thưởng, kỷ luật</span>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="sidebar-group">
+                <h6 class="sidebar-title">Quản lý Chấm công và Tính lương</h6>
+                <div class="sidebar-content">
+                    <a class="sidebar-item{{ Str::startsWith(request()->url(), url('/timekeeping')) ? ' active' : '' }}"
+                        href="{{route('timekeeping.index')}}">
+                        <span>Chấm công</span>
+                    </a>
+                    <a class="sidebar-item{{ Str::startsWith(request()->url(), url('/statistic')) ? ' active' : '' }}"
+                        href="{{route('timekeeping.statistic')}}">
+                        <span>Thống kê</span>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="sidebar-group">
+                <h6 class="sidebar-title">Báo cáo và Thống kê</h6>
+                <div class="sidebar-content">
+                    <a class="sidebar-item" href="#">
+                        <span>Báo cáo nhân sự</span>
+                    </a>
+                    <a class="sidebar-item" href="#">
+                        <span>Báo cáo lương</span>
+                    </a>
+                    <a class="sidebar-item" href="#">
+                        <span>Báo cáo ngày công</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="sidebar-group">
+                <h6 class="sidebar-title">Chức năng khác</h6>
+                <div class="sidebar-content">
+                    <a class="sidebar-item{{ Str::startsWith(request()->url(), url('/train-face')) ? ' active' : '' }}"
+                        href="{{route('trainface.index')}}">
+                        <span>Thêm dữ liệu khuôn mặt</span>
+                    </a>
+                    <a class="sidebar-item{{ Str::startsWith(request()->url(), url('/recognition-unknown-list')) ? ' active' : '' }}"
+                        href="{{route('recognition.index')}}">
+                        <span>Khuôn mặt chưa được nhận diện</span>
+                    </a>
+                    <a class="sidebar-item" href="#">
+                        <span>Quản lý truyền thông</span>
+                    </a>
+                    <a class="sidebar-item" href="#">
+                        <span>Cổng thông tin nhân viên</span>
+                    </a>
+                    <a class="sidebar-item" href="#">
+                        <span>Trợ lý trí tuệ nhân tạo</span>
+                    </a>
+                </div>
             </div>
         </div>
     </nav>

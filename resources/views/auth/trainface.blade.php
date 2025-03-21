@@ -157,6 +157,6 @@
 
 
 @push('javascript')
-    <script src="{{ asset('Assets/js/trainface.js') }}"></script>
-    <script src="{{ asset('Assets/js/department.js') }}"></script>
+    <script src="{{ asset('general/js/trainface.js') }}"></script>
+    <script src="{{ asset('general/js/department.js') }}"></script>
 @endpush

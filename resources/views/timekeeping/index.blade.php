@@ -39,5 +39,5 @@
 @endsection
 
 @push('javascript')
-    <script src="{{asset('Assets/js/timekeeping.js')}}"></script>
+    <script src="{{asset('general/js/timekeeping.js')}}"></script>
 @endpush

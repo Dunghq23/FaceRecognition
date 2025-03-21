@@ -83,6 +83,6 @@
 @endsection
 
 @push('javascript')
-    <script src="{{asset('Assets/js/department.js')}}"></script>
-    <script src="{{asset('Assets/js/trainUnknown.js')}}"></script>
+    <script src="{{asset('general/js/department.js')}}"></script>
+    <script src="{{asset('general/js/trainUnknown.js')}}"></script>
 @endpush

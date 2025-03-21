@@ -6,14 +6,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Default Title')</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <link rel="icon" href="{{ asset('Assets/images/favicon.png') }}" type="image/x-icon" />
-    <link rel="stylesheet" href="{{ asset('Assets/css/bootstrap.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('Assets/fontawesome-free-6.4.0-web/css/all.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('Assets/css/style.css') }}">
-    <link rel="stylesheet" href="{{ asset('Assets/css/main.css') }}">
-    <link rel="stylesheet" href="{{ asset('Assets/css/datetimepicker.css') }}">
+    <link rel="icon" href="{{ asset('general/images/favicon.png') }}" type="image/x-icon" />
+    <link rel="stylesheet" href="{{ asset('general/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('general/fontawesome-free-6.4.0-web/css/all.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('general/css/master/main.css') }}">
+    <link rel="stylesheet" href="{{ asset('general/css/master/sidebar.css') }}">
+    <link rel="stylesheet" href="{{ asset('general/css/master/header.css') }}">
+    <link rel="stylesheet" href="{{ asset('general/css/datetimepicker.css') }}">
     <link href="https://unpkg.com/gijgo@1.9.14/css/gijgo.min.css" rel="stylesheet" type="text/css" />
-    <link rel="stylesheet" href="{{ asset('Assets/css/spinner.css') }}">
+    <link rel="stylesheet" href="{{ asset('general/css/master/spinner.css') }}">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -67,11 +68,12 @@
         </div>
     </main>
 
-    <script src="{{ asset('Assets/js/bootstrap.bundle.min.js') }}"></script>
-    <script src="{{ asset('Assets/js/jquery-3.7.0.min.js') }}"></script>
+    <script src="{{ asset('general/js/libs/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ asset('general/js/libs/jquery-3.7.0.min.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="{{ asset('Assets/js/datetimepicker.js') }}"></script>
+    <script src="{{ asset('general/js/libs/datetimepicker.js') }}"></script>
     <script src="https://unpkg.com/gijgo@1.9.14/js/gijgo.min.js" type="text/javascript"></script>
+    <script type="text/javascript" src="{{ asset('general/js/tab-customize.js') }}"></script>
     @stack('javascript')
 </body>
 

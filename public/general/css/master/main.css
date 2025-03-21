@@ -1,6 +1,6 @@
 :root {
-    --primary: #38a7ff;
-    --primary-hover: #0081e8;
+    --primary: linear-gradient(to right, #2c7be5, #3a86ff);
+    --primary-hover: linear-gradient(to right, #2c7be5, #3a86ff);
     --text-primary-color: #525666;
 }
 body {
@@ -197,4 +197,14 @@ p.small {
     padding-left: 10px;
     z-index: 50;
     color: #38a7ff;
+}
+
+.dashboard-title {
+    padding: 12px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    background: linear-gradient(282deg, #00b0ff 5.54%, #3e98eb 100%) !important;
+    color: #fff;
 }

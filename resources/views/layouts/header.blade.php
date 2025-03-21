@@ -1,7 +1,7 @@
 <div class="navbar-custom bg-white fixed-top">
     <div class="text-center p-3">
         <a href="{{route('home')}}" class="text-center">
-            <img src="{{ asset('Assets/images/logo.jpg') }}" alt="" height="55" class="object-fit-cover">
+            <img src="{{ asset('general/images/logo.jpg') }}" alt="" height="55" class="object-fit-cover">
         </a>
     </div>
     {{-- <div class="d-flex align-items-center justify-content-center">
