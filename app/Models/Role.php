@@ -26,8 +26,8 @@ class Role extends Model
     /**
      * Quan hệ N-N: Một Role có thể được gán cho nhiều Employees
      */
-    public function employees()
+    public function accounts()
     {
-        return $this->belongsToMany(Employee::class, 'linkRoles', 'fk_role_id', 'fk_employee_id');
+        return $this->belongsToMany(User::class, 'linkRoles', 'fk_role_id', 'fk_account_id');
     }
 }

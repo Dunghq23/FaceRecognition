@@ -4,6 +4,8 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\TimekeepingController;
 use App\Http\Controllers\Admin\DepartmentController;
 use App\Http\Controllers\Admin\EmployeeController;
+use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\TrainController;
 use Illuminate\Support\Facades\Route;
 
@@ -68,6 +70,23 @@ Route::middleware('auth')->group(function () {
         Route::get('/employee/{id}/edit', [EmployeeController::class, 'edit'])->name('employee.edit');
         Route::patch('/employee/{id}', [EmployeeController::class, 'update'])->name('employee.update');
         Route::delete('/employee/{id}', [EmployeeController::class, 'destroy'])->name('employee.destroy');
+
+        // UserController (Quản lý người dùng)
+        Route::group(['prefix' => 'users', 'as' => 'users.'], function () {
+            Route::get('', [UserController::class, 'index'])->name('index');
+            Route::get('/create', [UserController::class, 'create'])->name('create');
+            Route::post('', [UserController::class, 'store'])->name('store');
+            Route::get('/{id}', [UserController::class, 'show'])->name('show');
+            Route::get('/{id}/edit', [UserController::class, 'edit'])->name('edit');
+            Route::patch('/{id}', [UserController::class, 'update'])->name('update');
+            Route::delete('/{id}', [UserController::class, 'destroy'])->name('destroy');
+        });
+
+        // RoleController (Phân quyền người dùng)
+        Route::group(['prefix' => 'roles', 'as' => 'roles.'], function () {
+            Route::get('', [RoleController::class, 'index'])->name('index');
+            Route::post('showRoleByUser', [RoleController::class, 'showRoleByUser']);
+        });
 
         // ajax
         Route::post('/getEmployeesByDepartment', [EmployeeController::class, 'getEmployeesByDepartmentAjax']);

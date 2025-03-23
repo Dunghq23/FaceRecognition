@@ -33,9 +33,9 @@ select * from roles;
 
 ----
 create table linkRoles (
-	fk_employee_id int not null,
+	fk_account_id int not null,
 	fk_role_id int not null,
-	foreign key (fk_employee_id) references employees(employee_id),
+	foreign key (fk_account_id) references accounts(account_id),
 	foreign key (fk_role_id) references roles(role_id)
 )
 
@@ -51,4 +51,19 @@ CREATE TABLE accounts (
 );
 
 select * from accounts;
+
 ---
+CREATE TABLE system_logs (
+    log_id int not null identity(1,1) primary key,
+    fk_account_id int not null,            -- ID người thực hiện (nullable nếu không đăng nhập)
+    action nvarchar(255) not null,         -- Hành động thực hiện (ví dụ: "Thêm sản phẩm", "Xóa tài khoản")
+    table_name nvarchar(100) null,         -- Bảng dữ liệu bị tác động (nếu có)
+    record_id int null,                    -- ID bản ghi bị tác động (nếu có)
+    details nvarchar(MAX) null,            -- Chi tiết thay đổi (JSON hoặc text mô tả)
+    user_agent nvarchar(500) not null,     -- Thông tin trình duyệt, thiết bị
+    created_at DATETIME2 DEFAULT SYSDATETIME()
+    foreign key (fk_account_id) references accounts(account_id) on delete cascade
+);
+
+select *from system_logs
+

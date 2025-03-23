@@ -36,12 +36,12 @@ function validateDate(firstControl, secondControl) {
 }
 
 // hàm hiển thị thông báo
-function ShowToast(type, message) {
+function ShowToast(type, message, duration = 3000) {
     const Toast = Swal.mixin({
         toast: true,
         position: "top-end",
         showConfirmButton: false,
-        timer: 3000,
+        timer: duration,
         timerProgressBar: true,
         didOpen: (toast) => {
             toast.onmouseenter = Swal.stopTimer;

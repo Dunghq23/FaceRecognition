@@ -11,7 +11,7 @@ class LinkRole extends Model
     protected $table = 'linkRoles';
 
     protected $fillable = [
-        'fk_employee_id',
+        'fk_account_id',
         'fk_role_id',
     ];
 }

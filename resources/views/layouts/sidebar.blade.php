@@ -12,10 +12,12 @@
             <div class="sidebar-group">
                 <h6 class="sidebar-title">Quản trị Hệ thống</h6>
                 <div class="sidebar-content">
-                    <a class="sidebar-item" href="#">
+                    <a class="sidebar-item{{ Str::startsWith(request()->url(), url('/management/users')) ? ' active' : '' }}"
+                        href="{{route('management.users.index')}}">
                         <span>Quản lý người dùng</span>
                     </a>
-                    <a class="sidebar-item" href="#">
+                    <a class="sidebar-item{{ Str::startsWith(request()->url(), url('/management/roles')) ? ' active' : '' }}"
+                        href="{{route('management.roles.index')}}">
                         <span>Phân quyền người dùng</span>
                     </a>
                     <a class="sidebar-item" href="#">

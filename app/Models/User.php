@@ -33,4 +33,9 @@ class User extends Model implements Authenticatable
     {
         return $this->belongsTo(Employee::class, 'fk_employee_id', 'employee_id');
     }
+
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class, 'linkRoles', 'fk_account_id', 'fk_role_id');
+    }
 }

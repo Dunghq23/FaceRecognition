@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\SystemLogEvent;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -41,6 +42,7 @@ class AuthController extends Controller
         }
 
         if (Auth::attempt($credentials)) {
+            event(new SystemLogEvent( 'Đăng nhập hệ thống'));
             $request->session()->regenerate();
             return redirect()->route('home')->with('success', 'Đăng nhập thành công!');
         }
@@ -51,6 +53,8 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
+        event(new SystemLogEvent( 'Đăng xuất hệ thống'));
+
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
