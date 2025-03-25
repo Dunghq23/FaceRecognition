@@ -14,4 +14,5 @@ class LinkRole extends Model
         'fk_account_id',
         'fk_role_id',
     ];
+    public $timestamps = false;
 }

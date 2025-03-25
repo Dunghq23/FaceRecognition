@@ -1,7 +1,11 @@
 :root {
     --primary: linear-gradient(to right, #2c7be5, #3a86ff);
-    --primary-hover: linear-gradient(to right, #2c7be5, #3a86ff);
+    --primary-hover: rgba(255, 255, 255, 0.3);
     --text-primary-color: #525666;
+
+    /* --primary: #38a7ff;
+    --primary-hover: #0081e8;
+    --text-primary-color: #525666; */
 }
 body {
     font-family: "Open Sans", "Roboto", sans-serif !important;
@@ -206,5 +210,19 @@ p.small {
     align-items: center;
 
     background: linear-gradient(282deg, #00b0ff 5.54%, #3e98eb 100%) !important;
+    /* background: var(--primary) !important; */
     color: #fff;
+}
+
+.card-header.bg-primary {
+    background: linear-gradient(to right, #2c7be5, #3a86ff);
+    color: #fff;
+}
+.card-header.bg-primary .btn-primary {
+    background-color: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+.card-header.bg-primary .btn-primary:hover {
+    background-color: rgba(255, 255, 255, 0.3);
 }

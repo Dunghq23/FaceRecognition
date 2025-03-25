@@ -7,12 +7,13 @@
         <ol class="breadcrumb mb-0">
             <li class="breadcrumb-item fw-medium"><a class="text-decoration-none" href="{{ route('home') }}">Trang chủ</a>
             </li>
-            <li class="breadcrumb-item fw-medium"><a class="text-decoration-none" href="{{ route('management.users.index') }}">Quản lý
+            <li class="breadcrumb-item fw-medium"><a class="text-decoration-none"
+                    href="{{ route('management.users.index') }}">Quản lý
                     người
                     dùng</a>
             </li>
             <li class="breadcrumb-item active fw-medium" aria-current="page">
-                Thêm
+                Thêm người dùng
             </li>
         </ol>
     </div>
@@ -27,17 +28,23 @@
                     <form id="formInformation" method="POST" action="{{ route('management.users.store') }}">
                         @csrf
                         <div class="mb-3">
+                            <label for="department" class="form-label">Chọn Phòng Ban</label>
+                            <select id="department" class="form-control">
+                                @foreach ($departments as $department)
+                                    <option value="{{ $department->department_id }}">{{ $department->department_name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="mb-3">
                             <div class="form-group">
-                                <label for="Name" class="form-label">
-                                    Tên người dùng
-                                </label>
-                                <input type="text" class="form-control{{ $errors->has('Name') ? ' is-invalid' : '' }}"
-                                    id="Name" name="Name" placeholder="Nhập tên người dùng"
-                                    value="{{ $user->Name ?? old('Name') }}" tabindex="1">
+                                <label for="user-select" class="form-label">Người sử dụng</label>
+                                <select id="user-select" name="Employee_Id" class="form-control">
+                                </select>
                             </div>
                             <span class="text-danger">
-                                @if ($errors->has('Name'))
-                                    {{ $errors->first('Name') }}
+                                @if ($errors->has('Employee_Id'))
+                                    {{ $errors->first('Employee_Id') }}
                                 @endif
                             </span>
                         </div>
@@ -54,6 +61,19 @@
                             <span class="text-danger">
                                 @if ($errors->has('UserName'))
                                     {{ $errors->first('UserName') }}
+                                @endif
+                            </span>
+                        </div>
+                        <div class="mb-3">
+                            <div class="form-group">
+                                <label for="password" class="form-label">Mật khẩu</label>
+                                <input type="password"
+                                    class="form-control{{ $errors->has('Password') ? ' is-invalid' : '' }}" id="Password"
+                                    name="Password" placeholder="Nhập mật khẩu" tabindex="3">
+                            </div>
+                            <span class="text-danger">
+                                @if ($errors->has('Password'))
+                                    {{ $errors->first('Password') }}
                                 @endif
                             </span>
                         </div>
@@ -118,7 +138,7 @@
         }
 
         $(document).ready(function() {
-            validateInput("#Name", "Vui lòng nhập tên người dùng");
+            // validateInput("#user-select", "Vui lòng chọn người sử dụng");
             validateInput("#UserName", "Vui lòng nhập tên đăng nhập");
             validateInput("#Password", "Vui lòng nhập mật khẩu");
 
@@ -142,7 +162,41 @@
                 if (isValid) {
                     this.submit();
                 }
-            })
+            });
+
+            $('#department').change(function() {
+                $("#cover-spin").show(0);
+
+                let departmentId = $(this).val();
+                let userSelect = $('#user-select');
+                userSelect.empty();
+
+                if (departmentId) {
+                    $.ajax({
+                        url: '/management/getEmployeesByDepartment',
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        type: 'POST',
+                        data: {
+                            department_id: departmentId
+                        },
+                        success: function(data) {
+                            data['employees'].forEach(employee => {
+                                userSelect.append(
+                                    `<option value="${employee.employee_id}">${employee.employee_name}</option>`
+                                );
+                            });
+                        },
+                        error: function() {
+                            alert('Lỗi khi tải danh sách người dùng.');
+                        }
+                    });
+                }
+                $("#cover-spin").hide(0);
+            });
+
+            $('#department').change();
         })
     </script>
 @endpush

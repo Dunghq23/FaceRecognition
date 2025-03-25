@@ -20,7 +20,8 @@
                         href="{{route('management.roles.index')}}">
                         <span>Phân quyền người dùng</span>
                     </a>
-                    <a class="sidebar-item" href="#">
+                    <a class="sidebar-item{{ Str::startsWith(request()->url(), url('/management/systemLogs')) ? ' active' : '' }}"
+                        href="{{route('management.systemLogs.index')}}">
                         <span>Nhật ký thao tác hệ thống</span>
                     </a>
                 </div>

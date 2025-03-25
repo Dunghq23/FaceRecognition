@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Events\SystemLogEvent;
 use App\Http\Controllers\Controller;
 use App\Models\LinkRole;
 use App\Models\Role;
@@ -15,9 +16,10 @@ class RoleController extends Controller
     //
     public function index()
     {
-        // $users = User::where('account_id', '!=', Auth::id())->get();
-        $users = User::all();
+        $users = User::where('account_id', '!=', Auth::id())->get();
         $roleParents = RoleParent::all();
+
+        // event(new SystemLogEvent('Xem quyền người dùng'));
 
         return view('admin.roles.index', compact('users', 'roleParents'));
     }
@@ -25,8 +27,7 @@ class RoleController extends Controller
     public function showRoleByUser(Request $request)
     {
         $user_id = $request->input('user_id');
-        $role_id = Role::
-            join('linkRoles', 'roles.role_id', '=', 'linkRoles.fk_role_id')
+        $role_id = Role::join('linkRoles', 'roles.role_id', '=', 'linkRoles.fk_role_id')
             ->where('linkRoles.fk_account_id', $user_id)
             ->get();
 
@@ -35,38 +36,36 @@ class RoleController extends Controller
 
     public function store(Request $request)
     {
-        // if ($request->ajax()) {
-        //     $roles = $request->input('role_id');
-        //     $user_id = $request->input('user_id');
+        if ($request->ajax()) {
+            $roles = $request->input('role_id');
+            $user_id = $request->input('user_id');
 
-        //     DB::table('LinkRoleUser')->where('FK_Id_User', $user_id)->delete();
+            $userFound = User::findOrFail($user_id);
 
-        //     if ($roles != null) {
-        //         foreach ($roles as $role_id) {
-        //             DB::table('LinkRoleUser')->insert([
-        //                 'FK_Id_User' => $user_id,
-        //                 'FK_Id_Role' => $role_id
-        //             ]);
-        //         }
-        //     }
+            if(!$userFound) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => "Người dùng không tồn tại!"
+                ]);
+            }
 
-        //     $roles = DB::table('LinkRoleUser')
-        //         ->join('Role', 'FK_Id_Role', '=', 'Id_Role')
-        //         ->where('FK_Id_User', $user_id)
-        //         ->select('FK_Id_Role', 'Name_Role')
-        //         ->get();
+            LinkRole::where('fk_account_id', $user_id)->delete();
 
-        //     $redirectUrl = redirect()->route('users.index');
+            if ($roles != null) {
+                foreach ($roles as $role_id) {
+                    LinkRole::create([
+                        'fk_account_id' => $user_id,
+                        'fk_role_id' => $role_id
+                    ]);
+                }
+            }
 
-        //     if (!$roles->contains('FK_Id_Role', 13)) {
-        //         $redirectUrl = $redirectUrl->with('type', 'success')
-        //             ->with('message', 'Đăng ký vai trò thành công!');
-        //     } else {
-        //         $redirectUrl = $redirectUrl->with('type', 'success')
-        //             ->with('message', 'Đăng ký vai trò thành công!');
-        //     }
+            event(new SystemLogEvent('Cập nhật quyền người dùng', 'linkRoles'));
 
-        //     return response()->json(['url' => $redirectUrl->getTargetUrl()]);
-        // }
+            return response()->json([
+                'status' => 'success',
+                'message' => "Đăng ký vai trò thành công!"
+            ]);
+        }
     }
 }

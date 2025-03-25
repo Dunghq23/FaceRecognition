@@ -27,8 +27,8 @@
                             </a>
                         </div>
                         <div class="d-flex justify-content-end align-items-center gap-3">
-                            <div>
-                                <button type="button" class="btn btn-outline" data-bs-toggle="modal"
+                            {{-- <div>
+                                <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal"
                                     data-bs-target="#deleteUser" tabindex="2">
                                     <i class="fa-solid fa-trash"></i>
                                 </button>
@@ -56,7 +56,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> --}}
                             <div>
                                 <input type="text" id="keySearch" name="search" class="form-control"
                                     placeholder="Tìm kiếm người dùng" tabindex="3">
@@ -88,23 +88,24 @@
                                     <td>{{ $user->username }}</td>
                                     <td>{{ $user->employee->employee_name }}</td>
                                     <td class="text-center">
-                                        <button type="button" class="btn btn-sm btn-outline btnShow" data-bs-toggle="modal"
-                                            data-bs-target="#role-{{ $user->Id_User }}" data-id="{{ $user->Id_User }}">
+                                        <button type="button" class="btn btn-sm btn-outline-primary btnShow" data-bs-toggle="modal"
+                                            data-bs-target="#role-{{ $user->account_id }}"
+                                            data-id="{{ $user->account_id }}">
                                             <i class="fa-solid fa-eye"></i>
                                         </button>
-                                        <div class="modal fade" id="role-{{ $user->Id_User }}" tabindex="-1"
+                                        <div class="modal fade" id="role-{{ $user->account_id }}" tabindex="-1"
                                             aria-labelledby="exampleModalLabel" aria-hidden="true">
                                             <div class="modal-dialog">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
                                                         <h4 class="modal-title" id="exampleModalLabel">Vai trò của
-                                                            người dùng {{ $user->Name }}
+                                                            người dùng {{ $user->employee->employee_name }}
                                                         </h4>
                                                         <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                             aria-label="Close"></button>
                                                     </div>
                                                     <div class="modal-body overflow-y-auto" style="height: 250px">
-                                                        {{-- @if ($user->roles->isEmpty())
+                                                        @if ($user->roles->isEmpty())
                                                             Người dùng chưa được cấp vai trò
                                                         @else
                                                             <div class="table-responsive">
@@ -116,18 +117,18 @@
                                                                             </th>
                                                                         </tr>
                                                                     </thead>
-                                                                    <tbody> --}}
-                                                        {{-- @foreach ($user->roles as $role)
+                                                                    <tbody>
+                                                                        @foreach ($user->roles as $role)
                                                                             <tr class="align-middle">
                                                                                 <td class="text-start">
-                                                                                    {{ $role->Name_Role }}
+                                                                                    {{ $role->role_name }}
                                                                                 </td>
                                                                             </tr>
-                                                                        @endforeach --}}
-                                                        {{-- </tbody>
+                                                                        @endforeach
+                                                                    </tbody>
                                                                 </table>
                                                             </div>
-                                                        @endif --}}
+                                                        @endif
                                                     </div>
                                                     <div class="modal-footer">
                                                         <button type="button" class="btn btn-secondary"
@@ -139,11 +140,11 @@
                                     </td>
                                     <td class="text-center">
                                         <a href="{{ route('management.users.edit', $user->account_id) }}"
-                                            class="btn btn-sm btn-outline btn_edit">
+                                            class="btn btn-sm btn-outline-warning btn_edit">
                                             <i class="fa-solid fa-pencil"></i>
                                         </a>
                                         @if ($user->account_id != Auth::user()->account_id)
-                                            <button type="button" class="btn btn-sm btn-outline" data-bs-toggle="modal"
+                                            <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal"
                                                 data-bs-target="#i{{ $user->account_id }}">
                                                 <i class="fa-solid fa-trash"></i>
                                             </button>
@@ -187,9 +188,9 @@
                     </table>
                 </div>
                 @if ($data->lastPage() > 1)
-                    <div class="card-footer pt-0 border-0 bg-transparent">
+                    <div class="card-footer border-0 bg-transparent">
                         <nav>
-                            {{ $data->links('pagination::bootstrap-4') }}
+                            {{ $data->links('components.pagination') }}
                         </nav>
                     </div>
                 @endif
@@ -259,30 +260,34 @@
             $("#keySearch").on('keyup', function() {
                 let searchValue = $(this).val();
                 $.ajax({
-                    url: "/users/searchUsers",
-                    type: "post",
+                    url: "/management/users/searchUsers",
+                    type: "POST",
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
                     data: {
-                        searchValue: searchValue,
-                        _token: window.csrfToken,
+                        searchValue: searchValue
                     },
                     success: function(response) {
                         let table = $("#table-data");
                         table.html('');
                         let html = '';
+                        console.log(response);
+                        
                         response.forEach((each) => {
                             html = `<tr class="align-middle">
-                                        <td class="text-center" data-id="Id_User" data-value="${each.Id_User}">
-                                            <input type="checkbox" class="form-check-input" data-id="${each.Id_User}">
+                                        <td class="text-center" data-id="Id_User" data-value="${each.account_id}">
+                                            <input type="checkbox" class="form-check-input" data-id="${each.account_id}">
                                         </td>
-                                        <td class="text-center">${each.Id_User}</td>
-                                        <td>${each.Name}</td>
-                                        <td>${each.UserName}</td>
+                                        <td class="text-center">${each.account_id}</td>
+                                        <td>${each.username}</td>
+                                        <td>${each.name}</td>
                                         <td class="text-center">
-                                            <button type="button" class="btn btn-sm btn-outline btnShow" data-bs-toggle="modal"
-                                            data-bs-target="#role-${each.Id_User}" data-id="${each.Id_User}">
+                                            <button type="button" class="btn btn-sm btn-outline-primary btnShow" data-bs-toggle="modal"
+                                            data-bs-target="#role-${each.account_id}" data-id="${each.account_id}">
                                             <i class="fa-solid fa-eye"></i>
                                             </button>
-                                            <div class="modal fade" id="role-${each.Id_User}" tabindex="-1" aria-labelledby="exampleModalLabel"
+                                            <div class="modal fade" id="role-${each.account_id}" tabindex="-1" aria-labelledby="exampleModalLabel"
                                             aria-hidden="true">
                                                 <div class="modal-dialog">
                                                     <div class="modal-content">
@@ -312,14 +317,14 @@
                                             </div>
                                         </td>
                                         <td class="text-center">
-                                            <a href="/users/${each.Id_User}/edit" class="btn btn-sm btn-outline btn_edit">
+                                            <a href="/users/${each.account_id}/edit" class="btn btn-sm btn-outline-warning btn_edit">
                                                 <i class="fa-solid fa-pencil"></i>
                                             </a>
-                                            <button type="button" class="btn btn-sm btn-outline" data-bs-toggle="modal"
-                                            data-bs-target="#i${each.Id_User}">
+                                            <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal"
+                                            data-bs-target="#i${each.account_id}">
                                                 <i class="fa-solid fa-trash"></i>
                                             </button>
-                                            <div class="modal fade" id="i${each.Id_User}" tabindex="-1" aria-labelledby="exampleModalLabel"
+                                            <div class="modal fade" id="i${each.account_id}" tabindex="-1" aria-labelledby="exampleModalLabel"
                                             aria-hidden="true">
                                                 <div class="modal-dialog">
                                                     <div class="modal-content">
@@ -337,7 +342,7 @@
                                                         </div>
                                                         <div class="modal-footer">
                                                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                                                            <form action="/users/${each.Id_User}" method="POST">
+                                                            <form action="management/users/${each.account_id}" method="POST">
                                                             @csrf
                                                             @method('DELETE')
                                                             <button type="submit" class="btn btn-danger">Xác nhận</button>

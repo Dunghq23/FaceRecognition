@@ -15,6 +15,8 @@ class User extends Model implements Authenticatable
 
     protected $primaryKey = 'account_id';
 
+    public $timestamps = false;
+
     protected $fillable = [
         'fk_employee_id',
         'username',

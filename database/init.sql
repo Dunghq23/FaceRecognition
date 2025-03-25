@@ -30,6 +30,8 @@ insert into roles (role_name, fk_roleParent_id) values
 
 
 select * from roles;
+select * from linkRoles;
+select * from accounts;
 
 ----
 create table linkRoles (

@@ -28,8 +28,8 @@
                     </h5>
                     <div class="row">
                         <div class="input-group mb-3">
-                            <label class="input-group-text" for="users">Người dùng</label>
-                            <select class="form-select" id="users">
+                            <label class="input-group-text" for="user-select">Người dùng</label>
+                            <select class="form-select" id="user-select">
                                 @foreach ($users as $user)
                                     <option value="{{ $user->account_id }}">{{ $user->username }}</option>
                                 @endforeach
@@ -64,7 +64,7 @@
                 </div>
                 <div class="card-footer pt-0 border-0 bg-transparent">
                     <div class="d-flex align-items-center justify-content-end">
-                        <button class="btn btn-outline float-end" data-bs-toggle="modal" data-bs-target="#modalstart"
+                        <button class="btn btn-outline-primary float-end" data-bs-toggle="modal" data-bs-target="#modalstart"
                             id="btnSave">Lưu lại</button>
                         <div class="modal fade" id="modalstart" tabindex="-1" aria-labelledby="exampleModalLabel"
                             aria-hidden="true">
@@ -110,9 +110,9 @@
                 }
             });
 
-            $('#users').change(function() {
+            function showRolesByUser() {
                 role_id = [];
-                let user_id = $(this).val();
+                let user_id = $('#user-select').val();
                 checkbox_lst.each(function() {
                     $(this).prop('checked', false);
                 });
@@ -120,8 +120,7 @@
                     url: '/management/roles/showRoleByUser/',
                     method: 'POST',
                     headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
-                            'content')
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
                     data: {
                         user_id: user_id,
@@ -131,10 +130,8 @@
                         let list_role = response;
                         list_role.forEach(element => {
                             if (element['fk_account_id'] == user_id) {
-                                let role_chk = "role" + element[
-                                    'fk_role_id'];
-                                $('#' + role_chk).prop('checked',
-                                    true);
+                                let role_chk = "role" + element['fk_role_id'];
+                                $('#' + role_chk).prop('checked', true);
                                 role_id.push(element['fk_role_id']);
                             }
                         });
@@ -144,14 +141,15 @@
                         alert("Có lỗi xảy ra. Vui lòng thử lại sau.");
                     },
                 });
-            });
+            }
 
-            $('#users').change();
+            $(document).on('change', '#user-select', showRolesByUser);
+            showRolesByUser();
 
             $('#btnConfirm').on('click', function() {
-                let user_id = $('#users').val();
+                let user_id = $('#user-select').val();
                 $.ajax({
-                    url: '/roles/users/store/',
+                    url: '/management/roles/store/',
                     method: 'POST',
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -161,7 +159,8 @@
                         user_id: user_id,
                     },
                     success: function(response) {
-                        window.location.href = response.url;
+                        // window.location.href = response.url;
+                        ShowToast(response['status'], response['message'], 2500);
                     },
                     error: function(xhr) {
                         console.log(xhr.responseText);

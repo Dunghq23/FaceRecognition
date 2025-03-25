@@ -5,6 +5,7 @@ use App\Http\Controllers\TimekeepingController;
 use App\Http\Controllers\Admin\DepartmentController;
 use App\Http\Controllers\Admin\EmployeeController;
 use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\SystemLogController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\TrainController;
 use Illuminate\Support\Facades\Route;
@@ -72,7 +73,7 @@ Route::middleware('auth')->group(function () {
         Route::delete('/employee/{id}', [EmployeeController::class, 'destroy'])->name('employee.destroy');
 
         // UserController (Quản lý người dùng)
-        Route::group(['prefix' => 'users', 'as' => 'users.'], function () {
+        Route::prefix('users')->name('users.')->middleware('grantRole:1')->group( function () {
             Route::get('', [UserController::class, 'index'])->name('index');
             Route::get('/create', [UserController::class, 'create'])->name('create');
             Route::post('', [UserController::class, 'store'])->name('store');
@@ -80,12 +81,21 @@ Route::middleware('auth')->group(function () {
             Route::get('/{id}/edit', [UserController::class, 'edit'])->name('edit');
             Route::patch('/{id}', [UserController::class, 'update'])->name('update');
             Route::delete('/{id}', [UserController::class, 'destroy'])->name('destroy');
+
+            Route::post('searchUsers', [UserController::class, 'searchUsers'])->name('searchUsers');
         });
 
         // RoleController (Phân quyền người dùng)
-        Route::group(['prefix' => 'roles', 'as' => 'roles.'], function () {
+        Route::prefix('roles')->name('roles.')->middleware('grantRole:2')->group( function () {
             Route::get('', [RoleController::class, 'index'])->name('index');
             Route::post('showRoleByUser', [RoleController::class, 'showRoleByUser']);
+            Route::post('store', [RoleController::class, 'store']);
+        });
+
+        Route::group(['prefix' => 'systemLogs', 'as' => 'systemLogs.'], function () {
+            Route::get('', [SystemLogController::class, 'index'])->name('index');
+            Route::post('filterLogs', [SystemLogController::class, 'filterLogs']);
+            Route::post('searchLogs', [SystemLogController::class, 'searchLogs']);
         });
 
         // ajax
