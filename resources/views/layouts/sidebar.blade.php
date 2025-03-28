@@ -30,15 +30,20 @@
             <div class="sidebar-group">
                 <h6 class="sidebar-title">Quản lý Tuyển dụng</h6>
                 <div class="sidebar-content">
-                    <a class="sidebar-item" href="#">
+                    <a class="sidebar-item{{ Str::startsWith(request()->url(), url('/recruit/jobs')) ? ' active' : '' }}"
+                        href="{{route('recruit.jobs.index')}}">
+                        <span>Tin tuyển dụng</span>
+                    </a>
+                    <a class="sidebar-item{{ Str::startsWith(request()->url(), url('/recruit/candidates')) ? ' active' : '' }}"
+                        href="{{route('recruit.candidates.index')}}">
                         <span>Hồ sơ ứng viên</span>
                     </a>
                     <a class="sidebar-item" href="#">
                         <span>Lịch phỏng vấn</span>
                     </a>
-                    <a class="sidebar-item" href="#">
+                    {{-- <a class="sidebar-item" href="#">
                         <span>Thông báo phỏng vấn</span>
-                    </a>
+                    </a> --}}
                 </div>
             </div>
             

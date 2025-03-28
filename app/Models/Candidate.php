@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -12,7 +13,7 @@ class Candidate extends Model
 
     protected $primaryKey = 'candidate_id'; // Khóa chính của bảng
 
-    public $timestamps = false;
+    // public $timestamps = false;
 
     protected $fillable = [
         'fk_origin_id',
@@ -23,8 +24,12 @@ class Candidate extends Model
         'birthday',
         'gender',
         'address',
+        'education_level', 
+        'education_place',
+        'major',
         'apply_time',
         'resumePath',
+        'avt',
         'status'
     ];
 
@@ -36,5 +41,10 @@ class Candidate extends Model
     public function jobPost()
     {
         return $this->belongsTo(JobPost::class, 'fk_jobPost_id', 'jobPost_id');
+    }
+
+    public function getApplyTimeAttribute()
+    {
+        return Carbon::parse($this->apply_time)->format('d/m/Y');
     }
 }

@@ -1,9 +1,11 @@
 <?php
 
+use App\Http\Controllers\admin\CandidateController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\TimekeepingController;
 use App\Http\Controllers\Admin\DepartmentController;
 use App\Http\Controllers\Admin\EmployeeController;
+use App\Http\Controllers\admin\JobPostController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\SystemLogController;
 use App\Http\Controllers\Admin\UserController;
@@ -73,7 +75,7 @@ Route::middleware('auth')->group(function () {
         Route::delete('/employee/{id}', [EmployeeController::class, 'destroy'])->name('employee.destroy');
 
         // UserController (Quản lý người dùng)
-        Route::prefix('users')->name('users.')->middleware('grantRole:1')->group( function () {
+        Route::prefix('users')->name('users.')->middleware('grantRole:1')->group(function () {
             Route::get('', [UserController::class, 'index'])->name('index');
             Route::get('/create', [UserController::class, 'create'])->name('create');
             Route::post('', [UserController::class, 'store'])->name('store');
@@ -86,7 +88,7 @@ Route::middleware('auth')->group(function () {
         });
 
         // RoleController (Phân quyền người dùng)
-        Route::prefix('roles')->name('roles.')->middleware('grantRole:2')->group( function () {
+        Route::prefix('roles')->name('roles.')->middleware('grantRole:2')->group(function () {
             Route::get('', [RoleController::class, 'index'])->name('index');
             Route::post('showRoleByUser', [RoleController::class, 'showRoleByUser']);
             Route::post('store', [RoleController::class, 'store']);
@@ -98,8 +100,30 @@ Route::middleware('auth')->group(function () {
             Route::post('searchLogs', [SystemLogController::class, 'searchLogs']);
         });
 
+
         // ajax
         Route::post('/getEmployeesByDepartment', [EmployeeController::class, 'getEmployeesByDepartmentAjax']);
         Route::get('/employees-by-department/{id}', [EmployeeController::class, 'getEmployeesByDepartment']);
+    });
+
+    // recruit
+    Route::prefix('recruit')->name('recruit.')->group(function () {
+        Route::prefix('jobs')->name('jobs.')->middleware('grantRole:2')->group(function () {
+            Route::get('/', [JobPostController::class, 'index'])->name(name: 'index');
+            Route::get('/create', [JobPostController::class, 'create'])->name('create');
+            Route::post('/store', [JobPostController::class, 'store'])->name('store');
+            Route::get('/{jobPost}/edit', [JobPostController::class, 'edit'])->name('edit');
+            Route::put('/{jobPost}', [JobPostController::class, 'update'])->name('update');
+            Route::delete('/{jobPost}', [JobPostController::class, 'destroy'])->name('destroy');
+        });
+
+        Route::prefix('candidates')->name('candidates.')->middleware('grantRole:2')->group(function () {
+            Route::get('/', [CandidateController::class, 'index'])->name(name: 'index');
+            Route::get('/create', [CandidateController::class, 'create'])->name('create');
+            Route::post('/store', [CandidateController::class, 'store'])->name('store');
+            Route::get('/{jobPost}/edit', [CandidateController::class, 'edit'])->name('edit');
+            Route::put('/{jobPost}', [CandidateController::class, 'update'])->name('update');
+            Route::delete('/{jobPost}', [CandidateController::class, 'destroy'])->name('destroy');
+        });
     });
 });

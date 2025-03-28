@@ -119,8 +119,10 @@ CREATE TABLE jobPosts (
     fk_major_id INT NOT NULL, -- Ngành nghề tuyển dụng
     fk_employee_id INT NOT NULL, -- Người đăng tin tuyển dụng
     title NVARCHAR(255) NOT NULL, -- Tiêu đề
+    role_hire NVARCHAR(120) NOT NULL, -- Vị trí tuyển dụng
     work_place NVARCHAR(255), -- Nơi làm việc
     salary_range NVARCHAR(255), -- Khoảng lương
+    quantity_hire INT NOT NULL, -- Số lượng tuyển
     expiried_date DATE NOT NULL, -- Thời gian hết hạn tuyển dụng
     description NVARCHAR(MAX) NOT NULL, -- Mô tả
     requirement NVARCHAR(MAX) NOT NULL, -- Yêu cầu
@@ -129,12 +131,16 @@ CREATE TABLE jobPosts (
     -- 0: Đang tuyển dụng
     -- 1: Tạm dừng nhận hồ sơ
     -- 2: Đóng tuyển dụng
+    created_at DATETIME2 DEFAULT SYSDATETIME(),
+    updated_at DATETIME2 DEFAULT SYSDATETIME(),
 
     FOREIGN KEY (fk_level_id) REFERENCES experienceLevels(level_id),
     FOREIGN KEY (fk_jobType_id) REFERENCES jobTypes(jobType_id),
     FOREIGN KEY (fk_major_id) REFERENCES majors(major_id),
     FOREIGN KEY (fk_employee_id) REFERENCES employees(employee_id)
 );
+
+select * from jobPosts;
 
 
 -- Nguồn ứng viên -- đổi tên bảng
@@ -162,6 +168,9 @@ CREATE TABLE candidates (
     birthday DATE NOT NULL, -- Ngày sinh
     gender VARCHAR(1) CHECK (gender IN ('F', 'M')) NOT NULL, -- Giới tính
     address NVARCHAR(255) NOT NULL, -- Địa chỉ ứng viên
+    education_level NVARCHAR(100) NOT NULL, -- Trình độ đào tạo
+    education_place NVARCHAR(255) NOT NULL, -- Nơi đào tạo
+    major NVARCHAR(100) NOT NULL, -- Chuyên ngành
     apply_time DATE NOT NULL, -- Thời gian nộp hồ sơ
     resumePath NVARCHAR(500), -- Đường dẫn file hồ sơ
     status INT CHECK (status IN (0, 1, 2, 3)) DEFAULT 0,
@@ -169,6 +178,8 @@ CREATE TABLE candidates (
     -- 1: Đang phỏng vấn
     -- 2: Đạt phỏng vấn
     -- 3: Không đạt
+    created_at DATETIME2 DEFAULT SYSDATETIME(),
+    updated_at DATETIME2 DEFAULT SYSDATETIME(),
 
     FOREIGN KEY (fk_origin_id) REFERENCES candidateOrigins(origin_id),
     FOREIGN KEY (fk_jobPost_id) REFERENCES jobPosts(jobPost_id)
@@ -207,8 +218,8 @@ CREATE TABLE interviewSchedules (
 --drop table interviewSchedules;
 --drop table workExperiences;
 --drop table candidates;
---drop table candidateSources;
+--drop table candidateOrigins;
 --drop table jobPosts;
---drop table industries;
+--drop table majors;
 --drop table jobTypes;
---drop table ranks;
+--drop table experienceLevels;

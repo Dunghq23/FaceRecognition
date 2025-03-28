@@ -1,27 +1,8 @@
 $(document).ready(function () {
-    // toast
-    function ShowToast(message) {
-        const Toast = Swal.mixin({
-            toast: true,
-            position: "top-end",
-            showConfirmButton: false,
-            timer: 3000,
-            timerProgressBar: true,
-            didOpen: (toast) => {
-                toast.onmouseenter = Swal.stopTimer;
-                toast.onmouseleave = Swal.resumeTimer;
-            }
-        });
-        Toast.fire({
-            icon: "error",
-            title: message
-        });
-    }
-
     // get data
     function GetEmployeesByDepartment(department_id) {
         $.ajax({
-            url: 'management/getEmployeesByDepartment',
+            url: '/management/getEmployeesByDepartment',
             method: 'POST',
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
@@ -42,13 +23,16 @@ $(document).ready(function () {
                 
             },
             error: function(xhr, status, error) {
-                ShowToast("Đã có lỗi xảy ra khi xem nhân viên theo phòng ban!");
+                ShowToast('error', 'Đã có lỗi xảy ra!');
             },
         });
     }
 
     $('#departments').on('change', function(){
         let department_id = $(this).val();
+        if(department_id === "") {
+            return;
+        }
         GetEmployeesByDepartment(department_id);
     })
 
